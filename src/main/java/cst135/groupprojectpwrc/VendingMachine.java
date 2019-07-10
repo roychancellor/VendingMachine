@@ -107,10 +107,21 @@ public class VendingMachine {
 	}
 	
 	public void displayMachineInterface() {
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.println("            Paul and Roy's Snack Box");
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("|  Fritos\t|  Doritos\t|  Cheetos  |");
-		System.out.println("|  $0.75\t|  $0.75\t|  $0.75  |");
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("|  Fritos\t|  Doritos\t|  Cheetos\t|");
+		System.out.println("|  $0.75\t|  $0.75\t|  $0.75\t|");
+		System.out.println("|  A1\t\t|  B1\t\t|  C1\t\t|");
+		System.out.println("-------------------------------------------------");
+		System.out.println("|  Pop Tarts\t|  Red Vines\t|  Twizzlers\t|");
+		System.out.println("|  $1.00\t|  $1.25\t|  $1.25\t|");
+		System.out.println("|  A2\t\t|  B2\t\t|  C2\t\t|");
+		System.out.println("-------------------------------------------------");
+		System.out.println("|  Pretzels\t|  Beef Jerky\t|  M & Ms\t|");
+		System.out.println("|  $1.50\t|  $1.75\t|  $0.50\t|");
+		System.out.println("|  A3\t\t|  B3\t\t|  C3\t\t|");
+		System.out.println("-------------------------------------------------");
+		System.out.println("\nMake a selection:");
 	}
 }
