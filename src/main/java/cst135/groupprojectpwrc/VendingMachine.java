@@ -13,7 +13,8 @@ public class VendingMachine {
 	private String machineID;
 	private double machineLatitude;
 	private double machineLongitude;
-	private Scanner sc = new Scanner(System.in);
+	private Payment payment;
+	public static Scanner sc = new Scanner(System.in);
 	
 	/**
 	 * Constructor for a new VendingMachine object
@@ -123,6 +124,13 @@ public class VendingMachine {
 		this.colSelect = colSelect;
 	}
 
+	/**
+	 * @return the payment
+	 */
+	public Payment getPayment() {
+		return payment;
+	}
+
 	//Class methods
 	public void restockItem() {
 		System.out.println("Restocking item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
@@ -131,6 +139,10 @@ public class VendingMachine {
 	public void purchaseItem() {
 		processSelection(getSelection());
 		System.out.println("Purchasing " + items[getRowSelect()][getColSelect()].getDescription());
+		//GET CASH PAYMENT FROM USER
+		payment = new Payment(items[getRowSelect()][getColSelect()].getSalesPrice());
+		payment.doCashPayment();
+		//Print items[row][col].snideRemark;
 	}
 	
 	public void recordTransaction() {
