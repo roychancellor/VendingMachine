@@ -145,6 +145,7 @@ public class VendingMachine {
 	//Machine user interface
 	public void displayMachineInterface() {
 		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
+		//TODO Add a format constant for the item descriptions
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.println("            Paul and Roy's Snack Box");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
@@ -179,18 +180,35 @@ public class VendingMachine {
 		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, itemsPerTube);
 	}
 	
+	/**
+	 * Gets the user selection and validates that it is only two characters long
+	 * and equals one of the available selection codes
+	 * @return
+	 */
 	private String getSelection() {
 		String selection;
+		boolean invalidSelection;
 		
 		do {
+			invalidSelection = false;
 			System.out.println("\nMake a selection (ex. A1):");
 			selection = sc.nextLine().toUpperCase();
-		} while((selection.charAt(0) != 'A' && selection.charAt(0) != 'B' && selection.charAt(0) != 'C') &&
-				(selection.charAt(1) != '1' && selection.charAt(1) != '2' && selection.charAt(1) != '3'));
-		
+			if(selection.length() != 2)
+				invalidSelection = true;
+			else if(selection.charAt(0) != 'A' && selection.charAt(0) != 'B' && selection.charAt(0) != 'C') {
+				invalidSelection = true;
+			}
+			else if(selection.charAt(1) != '1' && selection.charAt(1) != '2' && selection.charAt(1) != '3') {
+				invalidSelection = true;
+			}
+		} while(invalidSelection);
 		return selection;
 	}
 	
+	/**
+	 * Sets the row and column of the item to be dispensed
+	 * @param selection
+	 */
 	private void processSelection(String selection) {
 		//Set the item row
 		if(selection.charAt(0) == 'A')
