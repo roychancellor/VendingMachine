@@ -1,14 +1,19 @@
 package cst135.groupprojectpwrc;
 
+import java.util.Scanner;
+
 public class VendingMachine {
 	//Class data
 	private static int numRows;
 	private static int numCols;
+	private int rowSelect;
+	private int colSelect;
 	private Item[][] items;
 	private static final int itemsPerTube = 10;
 	private String machineID;
 	private double machineLatitude;
 	private double machineLongitude;
+	private Scanner sc = new Scanner(System.in);
 	
 	/**
 	 * Constructor for a new VendingMachine object
@@ -22,6 +27,7 @@ public class VendingMachine {
 		 this.machineID = "PWRC1";
 		 this.machineLatitude = 33.512682;
 		 this.machineLongitude = -112.113626;
+		 loadMachine();
 	}
 
 	//Accessors and Mutators
@@ -89,39 +95,117 @@ public class VendingMachine {
 		return items;
 	}
 	
+	/**
+	 * @return the rowSelect
+	 */
+	public int getRowSelect() {
+		return rowSelect;
+	}
+
+	/**
+	 * @param rowSelect the rowSelect to set
+	 */
+	public void setRowSelect(int rowSelect) {
+		this.rowSelect = rowSelect;
+	}
+
+	/**
+	 * @return the colSelect
+	 */
+	public int getColSelect() {
+		return colSelect;
+	}
+
+	/**
+	 * @param colSelect the colSelect to set
+	 */
+	public void setColSelect(int colSelect) {
+		this.colSelect = colSelect;
+	}
+
 	//Class methods
-	public void restockItem(int row, int col) {
-		System.out.println("Restocking item[" + (row + 1) + "][" + (col + 1) + "]");
+	public void restockItem() {
+		System.out.println("Restocking item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
 	}
 	
-	public void purchaseItem(int row, int col) {
-		System.out.println("Purchasing item[" + (row + 1) + "][" + (col + 1) + "]");
+	public void purchaseItem() {
+		processSelection(getSelection());
+		System.out.println("Purchasing " + items[getRowSelect()][getColSelect()].getDescription());
 	}
 	
-	public void recordTransaction(int row, int col) {
-		System.out.println("Recording transaction for item[" + (row + 1) + "][" + (col + 1) + "]");
+	public void recordTransaction() {
+		System.out.println("Recording transaction for item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
 	}
 	
-	public void alertLowStock(int row, int col) {
-		System.out.println("Low stock for item[" + (row + 1) + "][" + (col + 1) + "]");
+	//Move to Item class????
+	public void alertLowStock() {
+		System.out.println("Low stock for item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
 	}
 	
+	//Machine user interface
 	public void displayMachineInterface() {
+		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.println("            Paul and Roy's Snack Box");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("|  Fritos\t|  Doritos\t|  Cheetos\t|");
-		System.out.println("|  $0.75\t|  $0.75\t|  $0.75\t|");
+		System.out.println("|  " + items[0][0].getDescription() + "\t|  " + items[0][1].getDescription() + "\t|  " + items[0][2].getDescription() + "\t|");
+		//System.out.println("|  " + items[0][0].getSalesPrice() + "\t\t|  " + items[0][1].getSalesPrice() + "\t\t|  " + items[0][2].getSalesPrice() + "\t\t|");
+		System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
 		System.out.println("|  A1\t\t|  B1\t\t|  C1\t\t|");
 		System.out.println("-------------------------------------------------");
-		System.out.println("|  Pop Tarts\t|  Red Vines\t|  Twizzlers\t|");
-		System.out.println("|  $1.00\t|  $1.25\t|  $1.25\t|");
+		System.out.println("|  " + items[1][0].getDescription() + "\t|  " + items[1][1].getDescription() + "\t|  " + items[1][2].getDescription() + "\t|");
+		//System.out.println("|  " + items[1][0].getSalesPrice() + "\t\t|  " + items[1][1].getSalesPrice() + "\t\t|  " + items[1][2].getSalesPrice() + "\t\t|");
+		System.out.format(PRICES, items[1][0].getSalesPrice(), items[1][1].getSalesPrice(), items[1][2].getSalesPrice());
 		System.out.println("|  A2\t\t|  B2\t\t|  C2\t\t|");
 		System.out.println("-------------------------------------------------");
-		System.out.println("|  Pretzels\t|  Beef Jerky\t|  M & Ms\t|");
-		System.out.println("|  $1.50\t|  $1.75\t|  $0.50\t|");
+		System.out.println("|  " + items[2][0].getDescription() + "\t|  " + items[2][1].getDescription() + "\t|  " + items[2][2].getDescription() + "\t|");
+		//System.out.println("|  " + items[2][0].getSalesPrice() + "\t\t|  " + items[2][1].getSalesPrice() + "\t\t|  " + items[2][2].getSalesPrice() + "\t\t|");
+		System.out.format(PRICES, items[2][0].getSalesPrice(), items[2][1].getSalesPrice(), items[2][2].getSalesPrice());
 		System.out.println("|  A3\t\t|  B3\t\t|  C3\t\t|");
 		System.out.println("-------------------------------------------------");
-		System.out.println("\nMake a selection:");
+	}
+	
+	//Creates the items for the machine
+	private void loadMachine() {
+		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
+		items[0][0] = new Item(0.25, "Fritos", 0.75, 3, itemsPerTube);
+		items[0][1] = new Item(0.25, "Doritos", 0.75, 3, itemsPerTube);
+		items[0][2] = new Item(0.25, "Cheetos", 0.75, 3, itemsPerTube);
+		items[1][0] = new Item(0.25, "Pop Tarts", 1.00, 3, itemsPerTube);
+		items[1][1] = new Item(0.25, "Red Vines", 1.25, 3, itemsPerTube);
+		items[1][2] = new Item(0.25, "Twizzlers", 1.25, 3, itemsPerTube);
+		items[2][0] = new Item(0.25, "Pretzels", 1.50, 3, itemsPerTube);
+		items[2][1] = new Item(0.25, "Beef Jerky", 1.75, 3, itemsPerTube);
+		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, itemsPerTube);
+	}
+	
+	private String getSelection() {
+		String selection;
+		
+		do {
+			System.out.println("\nMake a selection (ex. A1):");
+			selection = sc.nextLine().toUpperCase();
+		} while((selection.charAt(0) != 'A' && selection.charAt(0) != 'B' && selection.charAt(0) != 'C') &&
+				(selection.charAt(1) != '1' && selection.charAt(1) != '2' && selection.charAt(1) != '3'));
+		
+		return selection;
+	}
+	
+	private void processSelection(String selection) {
+		//Set the item row
+		if(selection.charAt(0) == 'A')
+			setRowSelect(0);
+		else if(selection.charAt(0) == 'B')
+			setRowSelect(1);
+		else if(selection.charAt(0) == 'C')
+			setRowSelect(2);
+		
+		//Set the item column 
+		if(selection.charAt(1) == '1')
+			setColSelect(0);
+		else if(selection.charAt(1) == '2')
+			setColSelect(1);
+		else if(selection.charAt(1) == '3')
+			setColSelect(2);
 	}
 }
