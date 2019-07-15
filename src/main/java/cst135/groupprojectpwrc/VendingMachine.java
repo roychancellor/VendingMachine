@@ -223,19 +223,43 @@ public class VendingMachine {
 	 */
 	private void processSelection(String selection) {
 		//Set the item row
-		if(selection.charAt(0) == 'A')
-			setRowSelect(0);
-		else if(selection.charAt(0) == 'B')
-			setRowSelect(1);
-		else if(selection.charAt(0) == 'C')
-			setRowSelect(2);
+		switch(selection.charAt(0)) {
+			case 'A':
+				setColSelect(0);
+				break;
+			case 'B':
+				setColSelect(1);
+				break;
+			case 'C':
+				setColSelect(2);
+				break;
+		}
+//		if(selection.charAt(0) == 'A')
+//			setRowSelect(0);
+//		else if(selection.charAt(0) == 'B')
+//			setRowSelect(1);
+//		else if(selection.charAt(0) == 'C')
+//			setRowSelect(2);
 		
 		//Set the item column 
-		if(selection.charAt(1) == '1')
-			setColSelect(0);
-		else if(selection.charAt(1) == '2')
-			setColSelect(1);
-		else if(selection.charAt(1) == '3')
-			setColSelect(2);
+		switch(selection.charAt(1)) {
+			case '1':
+				setRowSelect(0);
+				break;
+			case '2':
+				setRowSelect(1);
+				break;
+			case '3':
+				setRowSelect(2);
+				break;
+		}
+		
+		System.out.println("row, col is " + getRowSelect() + ", " + getColSelect());
+//		if(selection.charAt(1) == '1')
+//			setColSelect(0);
+//		else if(selection.charAt(1) == '2')
+//			setColSelect(1);
+//		else if(selection.charAt(1) == '3')
+//			setColSelect(2);
 	}
 }
