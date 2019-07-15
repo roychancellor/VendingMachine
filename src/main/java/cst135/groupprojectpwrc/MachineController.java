@@ -7,5 +7,4 @@ public class MachineController {
 		vm.displayMachineInterface();
 		vm.purchaseItem();
 	}
-
 }

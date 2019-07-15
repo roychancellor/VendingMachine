@@ -137,12 +137,36 @@ public class VendingMachine {
 	}
 	
 	public void purchaseItem() {
+		//Get the selection from the user (e.g. "B3")
 		processSelection(getSelection());
-		System.out.println("Purchasing " + items[getRowSelect()][getColSelect()].getDescription());
-		//GET CASH PAYMENT FROM USER
-		payment = new Payment(items[getRowSelect()][getColSelect()].getSalesPrice());
-		payment.doCashPayment();
-		//Print items[row][col].snideRemark;
+		
+		//Check availability of item: if available, get payment and dispense item; if not, alert user
+		if(items[getRowSelect()][getColSelect()].getCurrentInventory() > 0 ) {
+			System.out.println("\nPurchasing " + items[getRowSelect()][getColSelect()].getDescription());
+			
+			//Get cash payment from the user
+			payment = new Payment(items[getRowSelect()][getColSelect()].getSalesPrice());
+			payment.doCashPayment();
+			
+			//Dispense item
+			dispenseItem();
+			
+			//Update inventory of the item
+			updateInventory();
+		}
+		else {
+			System.out.println("\n** Sorry, " + items[getRowSelect()][getColSelect()].getDescription() + " is unavailable."
+				+ " Make another selection.");
+		}
+	}
+	
+	private void dispenseItem() {
+		//Dispense the item to the user
+		System.out.println("\n" + items[getRowSelect()][getColSelect()].getConsumerMessage());		
+	}
+	
+	private void updateInventory() {
+		items[getRowSelect()][getColSelect()].setCurrentInventory(items[getRowSelect()][getColSelect()].getCurrentInventory() - 1);
 	}
 	
 	public void recordTransaction() {
@@ -157,39 +181,43 @@ public class VendingMachine {
 	//Machine user interface
 	public void displayMachineInterface() {
 		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
+		final String DESCRIPTIONS = "|  %s\t|  %s\t|  %s\t|\n";
+		final String CALORIES = "|  %d cal\t|  %d cal\t|  %d cal\t|\n";
+		final String CODES = "|  A%d\t\t|  B%d\t\t|  C%d\t\t|\n";
+		final String HORIZ_SEPARATOR = "-------------------------------------------------\n";
 		//TODO Add a format constant for the item descriptions
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.println("            Paul and Roy's Snack Box");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("|  " + items[0][0].getDescription() + "\t|  " + items[0][1].getDescription() + "\t|  " + items[0][2].getDescription() + "\t|");
-		//System.out.println("|  " + items[0][0].getSalesPrice() + "\t\t|  " + items[0][1].getSalesPrice() + "\t\t|  " + items[0][2].getSalesPrice() + "\t\t|");
+		System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
 		System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
-		System.out.println("|  A1\t\t|  B1\t\t|  C1\t\t|");
-		System.out.println("-------------------------------------------------");
-		System.out.println("|  " + items[1][0].getDescription() + "\t|  " + items[1][1].getDescription() + "\t|  " + items[1][2].getDescription() + "\t|");
-		//System.out.println("|  " + items[1][0].getSalesPrice() + "\t\t|  " + items[1][1].getSalesPrice() + "\t\t|  " + items[1][2].getSalesPrice() + "\t\t|");
+		System.out.format(CALORIES, items[0][0].getCalories(), items[0][1].getCalories(), items[0][2].getCalories());
+		System.out.format(CODES, 1, 1, 1);
+		System.out.format(HORIZ_SEPARATOR);
+		System.out.format(DESCRIPTIONS, items[1][0].getDescription(), items[1][1].getDescription(), items[1][2].getDescription());
 		System.out.format(PRICES, items[1][0].getSalesPrice(), items[1][1].getSalesPrice(), items[1][2].getSalesPrice());
-		System.out.println("|  A2\t\t|  B2\t\t|  C2\t\t|");
-		System.out.println("-------------------------------------------------");
-		System.out.println("|  " + items[2][0].getDescription() + "\t|  " + items[2][1].getDescription() + "\t|  " + items[2][2].getDescription() + "\t|");
-		//System.out.println("|  " + items[2][0].getSalesPrice() + "\t\t|  " + items[2][1].getSalesPrice() + "\t\t|  " + items[2][2].getSalesPrice() + "\t\t|");
+		System.out.format(CALORIES, items[1][0].getCalories(), items[1][1].getCalories(), items[1][2].getCalories());
+		System.out.format(CODES, 2, 2, 2);
+		System.out.format(HORIZ_SEPARATOR);
+		System.out.format(DESCRIPTIONS, items[2][0].getDescription(), items[2][1].getDescription(), items[2][2].getDescription());
 		System.out.format(PRICES, items[2][0].getSalesPrice(), items[2][1].getSalesPrice(), items[2][2].getSalesPrice());
-		System.out.println("|  A3\t\t|  B3\t\t|  C3\t\t|");
-		System.out.println("-------------------------------------------------");
+		System.out.format(CALORIES, items[2][0].getCalories(), items[2][1].getCalories(), items[2][2].getCalories());
+		System.out.format(CODES, 3, 3, 3);
+		System.out.format(HORIZ_SEPARATOR);
 	}
 	
 	//Creates the items for the machine
 	private void loadMachine() {
 		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
-		items[0][0] = new Item(0.25, "Fritos", 0.75, 3, itemsPerTube);
-		items[0][1] = new Item(0.25, "Doritos", 0.75, 3, itemsPerTube);
-		items[0][2] = new Item(0.25, "Cheetos", 0.75, 3, itemsPerTube);
-		items[1][0] = new Item(0.25, "Pop Tarts", 1.00, 3, itemsPerTube);
-		items[1][1] = new Item(0.25, "Red Vines", 1.25, 3, itemsPerTube);
-		items[1][2] = new Item(0.25, "Twizzlers", 1.25, 3, itemsPerTube);
-		items[2][0] = new Item(0.25, "Pretzels", 1.50, 3, itemsPerTube);
-		items[2][1] = new Item(0.25, "Beef Jerky", 1.75, 3, itemsPerTube);
-		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, itemsPerTube);
+		items[0][0] = new Item(0.25, "Fritos", 0.75, 3, itemsPerTube, 250);
+		items[0][1] = new Item(0.25, "Doritos", 0.75, 3, itemsPerTube, 250);
+		items[0][2] = new Item(0.25, "Cheetos", 0.75, 3, itemsPerTube, 250);
+		items[1][0] = new Item(0.25, "Pop Tarts", 1.00, 3, itemsPerTube, 300);
+		items[1][1] = new Item(0.25, "Red Vines", 1.25, 3, itemsPerTube, 150);
+		items[1][2] = new Item(0.25, "Twizzlers", 1.25, 3, itemsPerTube, 150);
+		items[2][0] = new Item(0.25, "Pretzels", 1.50, 3, itemsPerTube, 200);
+		items[2][1] = new Item(0.25, "Beef Jerky", 1.75, 3, itemsPerTube, 500);
+		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, itemsPerTube, 300);
 	}
 	
 	/**
@@ -218,7 +246,7 @@ public class VendingMachine {
 	}
 	
 	/**
-	 * Sets the row and column of the item to be dispensed
+	 * Sets the row and column indexes of the items array based on the item selection string (e.g. B3 becomes 2,1)
 	 * @param selection
 	 */
 	private void processSelection(String selection) {
@@ -234,12 +262,6 @@ public class VendingMachine {
 				setColSelect(2);
 				break;
 		}
-//		if(selection.charAt(0) == 'A')
-//			setRowSelect(0);
-//		else if(selection.charAt(0) == 'B')
-//			setRowSelect(1);
-//		else if(selection.charAt(0) == 'C')
-//			setRowSelect(2);
 		
 		//Set the item column 
 		switch(selection.charAt(1)) {
@@ -252,14 +274,6 @@ public class VendingMachine {
 			case '3':
 				setRowSelect(2);
 				break;
-		}
-		
-		System.out.println("row, col is " + getRowSelect() + ", " + getColSelect());
-//		if(selection.charAt(1) == '1')
-//			setColSelect(0);
-//		else if(selection.charAt(1) == '2')
-//			setColSelect(1);
-//		else if(selection.charAt(1) == '3')
-//			setColSelect(2);
+		}		
 	}
 }
