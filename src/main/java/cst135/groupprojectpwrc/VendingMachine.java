@@ -9,7 +9,7 @@ public class VendingMachine {
 	private int rowSelect;
 	private int colSelect;
 	private Item[][] items;
-	private static final int itemsPerTube = 10;
+	private static final int ITEMS_PER_TUBE = 2;
 	private String machineID;
 	private double machineLatitude;
 	private double machineLongitude;
@@ -31,6 +31,20 @@ public class VendingMachine {
 		 loadMachine();
 	}
 
+	//Creates the items for the machine
+	private void loadMachine() {
+		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
+		items[0][0] = new Item(0.25, "Fritos", 0.75, 3, ITEMS_PER_TUBE, 250);
+		items[0][1] = new Item(0.25, "Doritos", 0.75, 3, ITEMS_PER_TUBE, 250);
+		items[0][2] = new Item(0.25, "Cheetos", 0.75, 3, ITEMS_PER_TUBE, 250);
+		items[1][0] = new Item(0.25, "Pop Tarts", 1.00, 3, ITEMS_PER_TUBE, 300);
+		items[1][1] = new Item(0.25, "Red Vines", 1.25, 3, ITEMS_PER_TUBE, 150);
+		items[1][2] = new Item(0.25, "Twizzlers", 1.25, 3, ITEMS_PER_TUBE, 150);
+		items[2][0] = new Item(0.25, "Pretzels", 1.50, 3, ITEMS_PER_TUBE, 200);
+		items[2][1] = new Item(0.25, "Beef Jerky", 1.75, 3, ITEMS_PER_TUBE, 500);
+		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, ITEMS_PER_TUBE, 300);
+	}
+	
 	//Accessors and Mutators
 	
 	/**
@@ -132,8 +146,14 @@ public class VendingMachine {
 	}
 
 	//Class methods
-	public void restockItem() {
-		System.out.println("Restocking item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
+	
+	public void runMachine() {
+		do {
+			//Show machine interface
+			displayMachineInterface();
+			//Purchase items
+			purchaseItem();
+		} while(true);
 	}
 	
 	public void purchaseItem() {
@@ -178,15 +198,19 @@ public class VendingMachine {
 		System.out.println("Low stock for item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
 	}
 	
+	public void restockItem() {
+		System.out.println("Restocking item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
+	}
+	
 	//Machine user interface
 	public void displayMachineInterface() {
-		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
 		final String DESCRIPTIONS = "|  %s\t|  %s\t|  %s\t|\n";
+		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
 		final String CALORIES = "|  %d cal\t|  %d cal\t|  %d cal\t|\n";
 		final String CODES = "|  A%d\t\t|  B%d\t\t|  C%d\t\t|\n";
 		final String HORIZ_SEPARATOR = "-------------------------------------------------\n";
 		//TODO Add a format constant for the item descriptions
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.println("            Paul and Roy's Snack Box");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
@@ -204,20 +228,6 @@ public class VendingMachine {
 		System.out.format(CALORIES, items[2][0].getCalories(), items[2][1].getCalories(), items[2][2].getCalories());
 		System.out.format(CODES, 3, 3, 3);
 		System.out.format(HORIZ_SEPARATOR);
-	}
-	
-	//Creates the items for the machine
-	private void loadMachine() {
-		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
-		items[0][0] = new Item(0.25, "Fritos", 0.75, 3, itemsPerTube, 250);
-		items[0][1] = new Item(0.25, "Doritos", 0.75, 3, itemsPerTube, 250);
-		items[0][2] = new Item(0.25, "Cheetos", 0.75, 3, itemsPerTube, 250);
-		items[1][0] = new Item(0.25, "Pop Tarts", 1.00, 3, itemsPerTube, 300);
-		items[1][1] = new Item(0.25, "Red Vines", 1.25, 3, itemsPerTube, 150);
-		items[1][2] = new Item(0.25, "Twizzlers", 1.25, 3, itemsPerTube, 150);
-		items[2][0] = new Item(0.25, "Pretzels", 1.50, 3, itemsPerTube, 200);
-		items[2][1] = new Item(0.25, "Beef Jerky", 1.75, 3, itemsPerTube, 500);
-		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, itemsPerTube, 300);
 	}
 	
 	/**

@@ -62,7 +62,10 @@ public class Payment {
 			
 		} while(invalidSelection);
 		
-		//Convert validated selection into a dollar amount and return in
+		//scan the next line to clear out the newline character before returning
+		VendingMachine.sc.nextLine();
+		
+		//Convert validated selection into a dollar amount and return it
 		return selectionToDollar(selection);
 	}
 	
