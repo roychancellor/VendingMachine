@@ -7,10 +7,13 @@ public class Administrator {
 	
 	private String passCode;
 	private String phoneNumber;
+	private boolean machineRunning;
+	private VendingMachine vm;
 	
 	public Administrator(String passCode, String phoneNumber) {
 		this.passCode = passCode;
 		this.phoneNumber = phoneNumber;
+		this.machineRunning = true;
 	}
 	
 	/**
@@ -41,7 +44,85 @@ public class Administrator {
 		this.phoneNumber = phoneNumber;
 	}
 
+	/**
+	 * @return the runMachine
+	 */
+	public boolean isMachineRunning() {
+		return machineRunning;
+	}
+
 	//Class methods
+	/**
+	 * shows the cash menu
+	 * @param balanceOwed the remaining balance to be paid for the item
+	 */
+	private void showAdminMenu() {
+		System.out.println("\nrootrootrootrootrootrootrootroot");
+		System.out.println("       ADMINISTRATOR MENU");
+		System.out.println("rootrootrootrootrootrootrootroot");
+		System.out.println(" 1. Restock Items");
+		System.out.println(" 2. Reconfigure Items");
+		System.out.println(" 3. View Transactions");
+		System.out.println(" 4. Shutdown Machine");
+		System.out.println("-------------------------");
+		System.out.println(" 0. Exit to Machine");
+		System.out.println("-------------------------");
+		System.out.println(" Selection:");
+	}
+	
+	/**
+	 * primary method for performing machine administration functions
+	 * @param vm a VendingMachine item for the machine
+	 */
+	public void runAdmin(VendingMachine vm) {
+		this.vm = vm;
+		boolean adminLoggedIn = true;
+		final int EXIT_MENU = 0;
+		final int MIN_MENU = 1;
+		final int MAX_MENU = 4;
+		do {
+			adminLoggedIn = true;
+			showAdminMenu();
+			switch(FrontEnd.getIntFromUser(EXIT_MENU, MAX_MENU,
+				"Oops, enter a value from " + MIN_MENU + " to " + MAX_MENU + " or " + EXIT_MENU + " to exit admin mode")) {
+				case 1:
+					System.out.println("  Restocking items");
+					doRestockItems();
+					break;
+				case 2:
+					System.out.println("  Reconfiguring items");
+					break;
+				case 3:
+					System.out.println("  Viewing transactions");
+					this.printTransactions();
+					break;
+				case 4:
+					System.out.println("\n  ***Shutting down machine...");
+					this.machineRunning = false;
+					adminLoggedIn = false;
+					break;
+				case 0:
+					adminLoggedIn = false;
+					break;
+			}
+		} while(adminLoggedIn);
+	}
+	
+	/**
+	 * checks inventory of each item in the machine and replenishes any
+	 * tubes that are not full
+	 */
+	private void doRestockItems() {
+		for(int r = 0; r < vm.getNumRows(); r++) {
+			for(int c = 0; c < vm.getNumCols(); c++) {
+				if(vm.getItems()[r][c].getCurrentInventory() < vm.getItemsPerTube()) {
+					System.out.println("\n  Restocking " + vm.getItems()[r][c].getDescription());
+					vm.getItems()[r][c].setCurrentInventory(vm.getItemsPerTube());
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Creates the items for the machine
 	 * @param vm a vending machine object for loading items into
@@ -84,7 +165,9 @@ public class Administrator {
 	 * prints a list of transactions
 	 * @param vm the vending machine object for printing transactions
 	 */
-	public void printTransactions(VendingMachine vm) {
+	public void printTransactions() {
+		System.out.println("\nMachine\tDate-Time\t\tPos\tDescription\tCost\tSale");
+		System.out.println("---------------------------------------------------------------------");
 		if(vm.getTransactions().size() > 0) {
 			for(Transaction t : vm.getTransactions())
 				t.printTransaction();

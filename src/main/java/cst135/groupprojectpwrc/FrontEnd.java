@@ -1,5 +1,6 @@
 package cst135.groupprojectpwrc;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FrontEnd {
@@ -40,6 +41,42 @@ public class FrontEnd {
 	}
 	
 	/**
+	 * gets an integer between minValue and maxValue from the user
+	 * If the user enters anything other than an integer, catches the exception
+	 * and prints the error message received from the method call
+	 * @param minValue
+	 * @param maxValue
+	 * @param errorMessage
+	 * @return the integer the user entered
+	 */
+	public static int getIntFromUser(int minValue, int maxValue, String errorMessage) {
+		int selection = 0;
+		boolean invalidSelection;
+		
+		//Loop until the user enters an integer between the given limits
+		do {
+			invalidSelection = false;
+			try {
+				selection = FrontEnd.sc.nextInt();
+				if(selection < minValue || selection > maxValue) {
+					FrontEnd.showErrorMessage(errorMessage);
+					invalidSelection = true;
+				}
+			}
+			catch(InputMismatchException e) {
+				FrontEnd.showErrorMessage(errorMessage);
+				invalidSelection = true;
+				FrontEnd.sc.nextLine();
+			}
+		} while(invalidSelection);
+
+		//scan the next line to clear out the newline character before returning
+		FrontEnd.sc.nextLine();
+		
+		return selection;
+	}
+	
+	/**
 	 * shows the cash menu
 	 * @param balanceOwed the remaining balance to be paid for the item
 	 */
@@ -54,7 +91,7 @@ public class FrontEnd {
 		System.out.println("-------------------------");
 		System.out.println(" Selection:");
 	}
-	
+
 	/**
 	 * shows change being dispensed
 	 * @param balanceOwed the remaining balance to be paid for the item
@@ -66,8 +103,8 @@ public class FrontEnd {
 	/**
 	 * shows the cash error message when user enters the wrong type of cash
 	 */
-	public static void showCashErrorMessage() {
-		System.out.println("\n** Please insert quarters, dollar bills, or five-dollar bills only");		
+	public static void showErrorMessage(String message) {
+		System.out.println("\n" + message);		
 	}
 	
 	/**
@@ -87,25 +124,34 @@ public class FrontEnd {
 	}
 	
 	/**
-	 * Gets the user selection and validates that it is only two characters long
+	 * Gets the user selection in UPPER case and validates that it is only two characters long
 	 * and equals one of the available selection codes
 	 */
-	public static void getItemSelection() {
+	public static String getItemSelection(String adminPassword) {
 		boolean invalidSelection;
 		
 		do {
 			invalidSelection = false;
 			System.out.println("\nMake a selection (ex. A1):");
 			selection = sc.nextLine().toUpperCase();
-			if(selection.length() != 2)
-				invalidSelection = true;
-			else if(selection.charAt(0) != 'A' && selection.charAt(0) != 'B' && selection.charAt(0) != 'C') {
-				invalidSelection = true;
+			
+			//Check for admin password match
+			if(selection.equals(adminPassword.toUpperCase())) {
+				return selection;
 			}
-			else if(selection.charAt(1) != '1' && selection.charAt(1) != '2' && selection.charAt(1) != '3') {
-				invalidSelection = true;
+			else {
+				if(selection.length() != 2)
+					invalidSelection = true;
+				else if(selection.charAt(0) != 'A' && selection.charAt(0) != 'B' && selection.charAt(0) != 'C') {
+					invalidSelection = true;
+				}
+				else if(selection.charAt(1) != '1' && selection.charAt(1) != '2' && selection.charAt(1) != '3') {
+					invalidSelection = true;
+				}
 			}
-		} while(invalidSelection);		
+		} while(invalidSelection);
+		
+		return selection;
 	}
 	
 	/**

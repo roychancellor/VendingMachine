@@ -1,5 +1,7 @@
 package cst135.groupprojectpwrc;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transaction {
@@ -10,7 +12,9 @@ public class Transaction {
 	private String itemPositionCode;
 	private double itemCost;
 	private double purchaseAmount;
-	private static final String DELIM = ",";
+	private static final String DELIM = "\t";
+	private static final SimpleDateFormat dateTime = new SimpleDateFormat("MM/dd/YYYY HH:mm:ss");
+	private static final NumberFormat money = NumberFormat.getCurrencyInstance();
 	
 	//Constructor	
 	/**
@@ -116,12 +120,12 @@ public class Transaction {
 	}
 	
 	public String toString() {
-		return this.transDate
-			+ DELIM + this.machineID
+		return this.machineID
+			+ DELIM + dateTime.format(this.transDate)
 			+ DELIM + this.itemPositionCode
-			+ DELIM + this.itemPurchased
-			+ DELIM + this.itemCost
-			+ DELIM + this.purchaseAmount;
+			+ DELIM + this.itemPurchased + (this.itemPurchased.length() < 8 ? DELIM : "")
+			+ DELIM + money.format(this.itemCost)
+			+ DELIM + money.format(this.purchaseAmount);
 	}
 	
 	public void printTransaction() {

@@ -6,8 +6,8 @@ import java.util.List;
 public class VendingMachine {
 	//Class data fields
 	private String selection;
-	private static int numRows;
-	private static int numCols;
+	private int numRows;
+	private int numCols;
 	private int row;
 	private int col;
 	private Item[][] items;
@@ -26,12 +26,12 @@ public class VendingMachine {
 	 */
 	public VendingMachine(int numRows, int numCols) {
 		 items = new Item[numRows][numCols];
-		 VendingMachine.numRows = numRows;
-		 VendingMachine.numCols = numCols;
+		 this.numRows = numRows;
+		 this.numCols = numCols;
 		 this.machineID = "PWRC1";
 		 this.machineLatitude = 33.512682;
 		 this.machineLongitude = -112.113626;
-		 this.root = new Administrator("abc", "4802426456");
+		 this.root = new Administrator("<<rootkey>>", "4802426456");
 		 this.transactions = new ArrayList<Transaction>();
 		 root.loadMachine(this);
 	}
@@ -83,14 +83,14 @@ public class VendingMachine {
 	/**
 	 * @return the numRows
 	 */
-	public static int getNumRows() {
+	public int getNumRows() {
 		return numRows;
 	}
 
 	/**
 	 * @return the numCols
 	 */
-	public static int getNumCols() {
+	public int getNumCols() {
 		return numCols;
 	}
 
@@ -181,9 +181,22 @@ public class VendingMachine {
 		do {
 			//Show machine interface
 			FrontEnd.displayMachineInterface(this.items);
-			//Purchase items
-			purchaseItem();
-		} while(true);
+			//Get the selection from the user (e.g. "B3")
+			this.selection = FrontEnd.getItemSelection(root.getPassCode());
+			
+			//Check for entry of admin password
+			if(this.selection.toUpperCase().equals(root.getPassCode().toUpperCase())) {
+				//Open the admin screen
+				root.runAdmin(this);
+			}
+			else {
+				//Convert the selection into a row-column reference for the items array
+				setRow(FrontEnd.selectionToRow());
+				setCol(FrontEnd.selectionToCol());
+				//Purchase and dispense items
+				purchaseItem();				
+			}
+		} while(root.isMachineRunning());
 	}
 	
 	/**
@@ -193,12 +206,6 @@ public class VendingMachine {
 	 * the transaction for administrator analysis
 	 */
 	public void purchaseItem() {
-		//Get the selection from the user (e.g. "B3")
-		FrontEnd.getItemSelection();
-		//Convert the selection into a row-column reference for the items array
-		setRow(FrontEnd.selectionToRow());
-		setCol(FrontEnd.selectionToCol());
-		
 		//Check availability of item: if available, get payment and dispense item; if not, alert user
 		if(itemIsAvailable()) {
 			System.out.println("\nPurchasing " + items[getRow()][getCol()].getDescription());
