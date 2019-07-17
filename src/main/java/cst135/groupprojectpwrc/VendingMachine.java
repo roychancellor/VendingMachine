@@ -1,20 +1,27 @@
 package cst135.groupprojectpwrc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachine {
-	//Class data
+	//Class data fields
+	private String selection;
 	private static int numRows;
 	private static int numCols;
-	private int rowSelect;
-	private int colSelect;
+	private int row;
+	private int col;
 	private Item[][] items;
-	private static final int ITEMS_PER_TUBE = 2;
+	private final int ITEMS_PER_TUBE = 3;
 	private String machineID;
 	private double machineLatitude;
 	private double machineLongitude;
 	private Payment payment;
-	public static Scanner sc = new Scanner(System.in);
+	private List<Transaction> transactions;
+	private Administrator root;
+	
+	//Scanner for use across the application
+	public static final Scanner sc = new Scanner(System.in);
 	
 	/**
 	 * Constructor for a new VendingMachine object
@@ -28,23 +35,11 @@ public class VendingMachine {
 		 this.machineID = "PWRC1";
 		 this.machineLatitude = 33.512682;
 		 this.machineLongitude = -112.113626;
-		 loadMachine();
+		 this.root = new Administrator("abc", "4802426456");
+		 this.transactions = new ArrayList<Transaction>();
+		 root.loadMachine(this);
 	}
 
-	//Creates the items for the machine
-	private void loadMachine() {
-		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
-		items[0][0] = new Item(0.25, "Fritos", 0.75, 3, ITEMS_PER_TUBE, 250);
-		items[0][1] = new Item(0.25, "Doritos", 0.75, 3, ITEMS_PER_TUBE, 250);
-		items[0][2] = new Item(0.25, "Cheetos", 0.75, 3, ITEMS_PER_TUBE, 250);
-		items[1][0] = new Item(0.25, "Pop Tarts", 1.00, 3, ITEMS_PER_TUBE, 300);
-		items[1][1] = new Item(0.25, "Red Vines", 1.25, 3, ITEMS_PER_TUBE, 150);
-		items[1][2] = new Item(0.25, "Twizzlers", 1.25, 3, ITEMS_PER_TUBE, 150);
-		items[2][0] = new Item(0.25, "Pretzels", 1.50, 3, ITEMS_PER_TUBE, 200);
-		items[2][1] = new Item(0.25, "Beef Jerky", 1.75, 3, ITEMS_PER_TUBE, 500);
-		items[2][2] = new Item(0.25, "M & Ms", 0.50, 3, ITEMS_PER_TUBE, 300);
-	}
-	
 	//Accessors and Mutators
 	
 	/**
@@ -111,31 +106,38 @@ public class VendingMachine {
 	}
 	
 	/**
-	 * @return the rowSelect
+	 * @return the itemsPerTube
 	 */
-	public int getRowSelect() {
-		return rowSelect;
+	public int getItemsPerTube() {
+		return ITEMS_PER_TUBE;
 	}
 
 	/**
-	 * @param rowSelect the rowSelect to set
+	 * @return the row
 	 */
-	public void setRowSelect(int rowSelect) {
-		this.rowSelect = rowSelect;
+	public int getRow() {
+		return row;
 	}
 
 	/**
-	 * @return the colSelect
+	 * @param row the row to set
 	 */
-	public int getColSelect() {
-		return colSelect;
+	public void setRow(int rowSelect) {
+		this.row = rowSelect;
 	}
 
 	/**
-	 * @param colSelect the colSelect to set
+	 * @return the col
 	 */
-	public void setColSelect(int colSelect) {
-		this.colSelect = colSelect;
+	public int getCol() {
+		return col;
+	}
+
+	/**
+	 * @param col the col to set
+	 */
+	public void setCol(int colSelect) {
+		this.col = colSelect;
 	}
 
 	/**
@@ -147,6 +149,38 @@ public class VendingMachine {
 
 	//Class methods
 	
+	/**
+	 * @return the transactions
+	 */
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+	
+	/**
+	 * @return the root
+	 */
+	public Administrator getRoot() {
+		return root;
+	}
+
+	/**
+	 * @param root the root to set
+	 */
+	public void setRoot(Administrator root) {
+		this.root = root;
+	}
+
+	/**
+	 * returns the machine ID with the latitude and longitude of its location
+	 */
+	public String toString() {
+		return this.machineID + ": lat " + this.machineLatitude + ", long " + this.machineLongitude;
+	}
+
+	//Class methods
+	/**
+	 * method that perpetually runs the machine
+	 */
 	public void runMachine() {
 		do {
 			//Show machine interface
@@ -156,50 +190,91 @@ public class VendingMachine {
 		} while(true);
 	}
 	
+	/**
+	 * the primary method for purchasing items from the machine
+	 * gets a selection from the user, determines if the item is available,
+	 * gets cash payment, dispenses item, updates inventory, and records
+	 * the transaction for administrator analysis
+	 */
 	public void purchaseItem() {
 		//Get the selection from the user (e.g. "B3")
-		processSelection(getSelection());
+		getSelection();
+		//Convert the selection into a row-column reference for the items array
+		selectionToRowCol();
 		
 		//Check availability of item: if available, get payment and dispense item; if not, alert user
-		if(items[getRowSelect()][getColSelect()].getCurrentInventory() > 0 ) {
-			System.out.println("\nPurchasing " + items[getRowSelect()][getColSelect()].getDescription());
+		if(itemIsAvailable()) {
+			System.out.println("\nPurchasing " + items[getRow()][getCol()].getDescription());
 			
 			//Get cash payment from the user
-			payment = new Payment(items[getRowSelect()][getColSelect()].getSalesPrice());
+			payment = new Payment(items[getRow()][getCol()].getSalesPrice());
 			payment.doCashPayment();
 			
 			//Dispense item
 			dispenseItem();
 			
 			//Update inventory of the item
-			updateInventory();
+			decrementInventory();
+			
+			//Record the transaction
+			recordTransaction();			
 		}
 		else {
-			System.out.println("\n** Sorry, " + items[getRowSelect()][getColSelect()].getDescription() + " is unavailable."
-				+ " Make another selection.");
+			String stateVerb = "is";
+			if(items[getRow()][getCol()].getDescription().charAt(items[getRow()][getCol()].getDescription().length() - 1) == 's')
+				stateVerb = "are";
+			
+			System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			System.out.println("  Sorry, " + items[getRow()][getCol()].getDescription()
+				+ " " + stateVerb + " unavailable"
+				+ "\n  Make a different selection");
+			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		}
 	}
 	
+	/**
+	 * determines if an item is available
+	 * @return the boolean value of item inventory > 0
+	 */
+	private boolean itemIsAvailable() {
+		return items[getRow()][getCol()].getCurrentInventory() > 0;
+	}
+	
+	/**
+	 * dispenses an item to the user (simulated since no physical machine)
+	 * outputs a message to the user
+	 */
 	private void dispenseItem() {
 		//Dispense the item to the user
-		System.out.println("\n" + items[getRowSelect()][getColSelect()].getConsumerMessage());		
+		System.out.println("<<<< whirring >>>>");
+		System.out.println("<<<< clunk >>>>");
+		System.out.println("\n" + items[getRow()][getCol()].getConsumerMessage());	
 	}
 	
-	private void updateInventory() {
-		items[getRowSelect()][getColSelect()].setCurrentInventory(items[getRowSelect()][getColSelect()].getCurrentInventory() - 1);
+	/**
+	 * decrements the item inventory and alerts the administrator of low inventory
+	 */
+	private void decrementInventory() {
+		//Decrement the item inventory
+		items[getRow()][getCol()].setCurrentInventory(items[getRow()][getCol()].getCurrentInventory() - 1);
+		
+		//Alert administrator of low inventory
+		if(items[getRow()][getCol()].getCurrentInventory() <= items[getRow()][getCol()].getMinStockLevel()) {
+			this.alertLowStock();			
+		}		
 	}
 	
+	/**
+	 * adds a transaction to the transaction list
+	 */
 	public void recordTransaction() {
-		System.out.println("Recording transaction for item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
-	}
-	
-	//Move to Item class????
-	public void alertLowStock() {
-		System.out.println("Low stock for item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
-	}
-	
-	public void restockItem() {
-		System.out.println("Restocking item[" + (rowSelect + 1) + "][" + (colSelect + 1) + "]");
+		transactions.add(
+			new Transaction(this.machineID,
+			items[getRow()][getCol()].getDescription(),
+			this.selection,
+			items[getRow()][getCol()].getCost(),
+			items[getRow()][getCol()].getSalesPrice())
+		);
 	}
 	
 	//Machine user interface
@@ -213,6 +288,7 @@ public class VendingMachine {
 		System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		System.out.println("            Paul and Roy's Snack Box");
 		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.format("\n" + HORIZ_SEPARATOR);
 		System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
 		System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
 		System.out.format(CALORIES, items[0][0].getCalories(), items[0][1].getCalories(), items[0][2].getCalories());
@@ -235,8 +311,7 @@ public class VendingMachine {
 	 * and equals one of the available selection codes
 	 * @return
 	 */
-	private String getSelection() {
-		String selection;
+	private void getSelection() {
 		boolean invalidSelection;
 		
 		do {
@@ -252,38 +327,61 @@ public class VendingMachine {
 				invalidSelection = true;
 			}
 		} while(invalidSelection);
-		return selection;
 	}
 	
 	/**
 	 * Sets the row and column indexes of the items array based on the item selection string (e.g. B3 becomes 2,1)
 	 * @param selection
 	 */
-	private void processSelection(String selection) {
+	private void selectionToRowCol() {
 		//Set the item row
 		switch(selection.charAt(0)) {
 			case 'A':
-				setColSelect(0);
+				setCol(0);
 				break;
 			case 'B':
-				setColSelect(1);
+				setCol(1);
 				break;
 			case 'C':
-				setColSelect(2);
+				setCol(2);
 				break;
 		}
 		
 		//Set the item column 
 		switch(selection.charAt(1)) {
 			case '1':
-				setRowSelect(0);
+				setRow(0);
 				break;
 			case '2':
-				setRowSelect(1);
+				setRow(1);
 				break;
 			case '3':
-				setRowSelect(2);
+				setRow(2);
 				break;
 		}		
+	}
+	
+	/**
+	 * Alerts the machine administrator of low inventory for an item
+	 */
+	private void alertLowStock() {
+		if(!items[getRow()][getCol()].isAdminAlerted()) {
+			System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			System.out.println(" Messaging administrator:");
+			messageAdmin("Low stock of " + items[getRow()][getCol()].getDescription()
+				+ " in machine: " + this.toString());
+			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			
+			items[getRow()][getCol()].setAdminAlerted(true);
+		}
+	}	
+	
+	/**
+	 * sends message to machine administrator
+	 * @param message
+	 */
+	private void messageAdmin(String message) { 
+		System.out.println(" Sending message to " + root.getPhoneNumber() + "\n \"" + message + "\"" );
+		System.out.println("\n <<<< swoosh....message sent >>>>");
 	}
 }

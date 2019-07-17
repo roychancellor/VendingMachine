@@ -5,6 +5,7 @@ public class Item {
 	private String description;
 	private double salesPrice;
 	private int minStockLevel;
+	private boolean adminAlerted;
 	private int currentInventory;
 	private int calories;
 	private String consumerMessage;
@@ -29,6 +30,7 @@ public class Item {
 		this.description = description;
 		this.salesPrice = salesPrice;
 		this.minStockLevel = minStockLevel;
+		this.adminAlerted = false;
 		this.currentInventory = currentInventory;
 		this.calories = calories;
 		this.consumerMessage = "Enjoy your " + this.description + " and note that it will take "
@@ -89,6 +91,20 @@ public class Item {
 	 */
 	public void setMinStockLevel(int minStockLevel) {
 		this.minStockLevel = minStockLevel;
+	}
+
+	/**
+	 * @return the adminAlerted
+	 */
+	public boolean isAdminAlerted() {
+		return adminAlerted;
+	}
+
+	/**
+	 * @param adminAlerted the adminAlerted to set
+	 */
+	public void setAdminAlerted(boolean adminAlerted) {
+		this.adminAlerted = adminAlerted;
 	}
 
 	/**
