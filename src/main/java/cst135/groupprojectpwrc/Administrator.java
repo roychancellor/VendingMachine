@@ -44,6 +44,7 @@ public class Administrator {
 	//Class methods
 	/**
 	 * Creates the items for the machine
+	 * @param vm a vending machine object for loading items into
 	 */
 	public void loadMachine(VendingMachine vm) {
 		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
@@ -60,6 +61,9 @@ public class Administrator {
 	
 	/**
 	 * replenishes inventory for an item
+	 * @param vm the vending machine being restocked
+	 * @param row the row reference of the item being replenished
+	 * @param col the col reference of the item being replenished
 	 */
 	public void restockItem(VendingMachine vm, int row, int col) {
 		System.out.println("\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -78,6 +82,7 @@ public class Administrator {
 	
 	/**
 	 * prints a list of transactions
+	 * @param vm the vending machine object for printing transactions
 	 */
 	public void printTransactions(VendingMachine vm) {
 		if(vm.getTransactions().size() > 0) {

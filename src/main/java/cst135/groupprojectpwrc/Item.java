@@ -150,6 +150,9 @@ public class Item {
 	}
 
 	//Class methods
+	/**
+	 * returns a String representation of an item object
+	 */
 	public String toString() {
 		return description + "," + cost + "," + salesPrice;
 	}
