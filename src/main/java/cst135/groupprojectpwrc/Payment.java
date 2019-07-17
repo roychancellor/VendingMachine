@@ -21,24 +21,8 @@ public class Payment {
 		//if cash paid > purchase price, then dispense change; otherwise, loop
 		System.out.print("\nThank you!");
 		if(this.balanceOwed < 0) {
-			dispenseChange();
+			FrontEnd.dispenseChange(this.balanceOwed);
 		}
-	}
-	
-	private void showCashMenu() {
-		System.out.println("\n-------------------------");
-		System.out.println("      CASH PAYMENT");
-		System.out.format("      Insert $%.2f\n", this.balanceOwed);
-		System.out.println("-------------------------");
-		System.out.println(" 1. $0.25");
-		System.out.println(" 2. $1.00");
-		System.out.println(" 3. $5.00");
-		System.out.println("-------------------------");
-		System.out.println(" Selection:");
-	}
-	
-	private void dispenseChange() {
-		System.out.format(" Dispensing $%.2f change in the dispenser.\n", -this.balanceOwed);
 	}
 	
 	public double getPaymentAmount() {
@@ -46,31 +30,27 @@ public class Payment {
 		int selection = 0;
 		do {
 			invalidSelection = false;
-			showCashMenu();
+			FrontEnd.showCashMenu(this.balanceOwed);
 			try {
-				selection = VendingMachine.sc.nextInt();
+				selection = FrontEnd.sc.nextInt();
 				if(selection !=1 && selection != 2 && selection != 3) {
-					showErrorMessage();
+					FrontEnd.showCashErrorMessage();
 					invalidSelection = true;
 				}
 			}
 			catch(InputMismatchException e) {
-				showErrorMessage();
+				FrontEnd.showCashErrorMessage();
 				invalidSelection = true;
-				VendingMachine.sc.nextLine();
+				FrontEnd.sc.nextLine();
 			}
 			
 		} while(invalidSelection);
 		
 		//scan the next line to clear out the newline character before returning
-		VendingMachine.sc.nextLine();
+		FrontEnd.sc.nextLine();
 		
 		//Convert validated selection into a dollar amount and return it
 		return selectionToDollar(selection);
-	}
-	
-	private void showErrorMessage() {
-		System.out.println("\n** Please insert quarters, dollar bills, or five-dollar bills only");		
 	}
 	
 	/**

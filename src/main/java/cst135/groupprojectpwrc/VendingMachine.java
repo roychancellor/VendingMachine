@@ -2,7 +2,6 @@ package cst135.groupprojectpwrc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class VendingMachine {
 	//Class data fields
@@ -19,9 +18,6 @@ public class VendingMachine {
 	private Payment payment;
 	private List<Transaction> transactions;
 	private Administrator root;
-	
-	//Scanner for use across the application
-	public static final Scanner sc = new Scanner(System.in);
 	
 	/**
 	 * Constructor for a new VendingMachine object
@@ -184,7 +180,7 @@ public class VendingMachine {
 	public void runMachine() {
 		do {
 			//Show machine interface
-			displayMachineInterface();
+			FrontEnd.displayMachineInterface(this.items);
 			//Purchase items
 			purchaseItem();
 		} while(true);
@@ -198,9 +194,10 @@ public class VendingMachine {
 	 */
 	public void purchaseItem() {
 		//Get the selection from the user (e.g. "B3")
-		getSelection();
+		FrontEnd.getItemSelection();
 		//Convert the selection into a row-column reference for the items array
-		selectionToRowCol();
+		setRow(FrontEnd.selectionToRow());
+		setCol(FrontEnd.selectionToCol());
 		
 		//Check availability of item: if available, get payment and dispense item; if not, alert user
 		if(itemIsAvailable()) {
@@ -220,15 +217,7 @@ public class VendingMachine {
 			recordTransaction();			
 		}
 		else {
-			String stateVerb = "is";
-			if(items[getRow()][getCol()].getDescription().charAt(items[getRow()][getCol()].getDescription().length() - 1) == 's')
-				stateVerb = "are";
-			
-			System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-			System.out.println("  Sorry, " + items[getRow()][getCol()].getDescription()
-				+ " " + stateVerb + " unavailable"
-				+ "\n  Make a different selection");
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			FrontEnd.showItemNotAvailable(items[getRow()][getCol()].getDescription());
 		}
 	}
 	
@@ -246,7 +235,7 @@ public class VendingMachine {
 	 */
 	private void dispenseItem() {
 		//Dispense the item to the user
-		System.out.println("<<<< whirring >>>>");
+		System.out.println("\n<<<< whirring >>>>");
 		System.out.println("<<<< clunk >>>>");
 		System.out.println("\n" + items[getRow()][getCol()].getConsumerMessage());	
 	}
@@ -275,90 +264,6 @@ public class VendingMachine {
 			items[getRow()][getCol()].getCost(),
 			items[getRow()][getCol()].getSalesPrice())
 		);
-	}
-	
-	//Machine user interface
-	public void displayMachineInterface() {
-		final String DESCRIPTIONS = "|  %s\t|  %s\t|  %s\t|\n";
-		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
-		final String CALORIES = "|  %d cal\t|  %d cal\t|  %d cal\t|\n";
-		final String CODES = "|  A%d\t\t|  B%d\t\t|  C%d\t\t|\n";
-		final String HORIZ_SEPARATOR = "-------------------------------------------------\n";
-		//TODO Add a format constant for the item descriptions
-		System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("            Paul and Roy's Snack Box");
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.format("\n" + HORIZ_SEPARATOR);
-		System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
-		System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
-		System.out.format(CALORIES, items[0][0].getCalories(), items[0][1].getCalories(), items[0][2].getCalories());
-		System.out.format(CODES, 1, 1, 1);
-		System.out.format(HORIZ_SEPARATOR);
-		System.out.format(DESCRIPTIONS, items[1][0].getDescription(), items[1][1].getDescription(), items[1][2].getDescription());
-		System.out.format(PRICES, items[1][0].getSalesPrice(), items[1][1].getSalesPrice(), items[1][2].getSalesPrice());
-		System.out.format(CALORIES, items[1][0].getCalories(), items[1][1].getCalories(), items[1][2].getCalories());
-		System.out.format(CODES, 2, 2, 2);
-		System.out.format(HORIZ_SEPARATOR);
-		System.out.format(DESCRIPTIONS, items[2][0].getDescription(), items[2][1].getDescription(), items[2][2].getDescription());
-		System.out.format(PRICES, items[2][0].getSalesPrice(), items[2][1].getSalesPrice(), items[2][2].getSalesPrice());
-		System.out.format(CALORIES, items[2][0].getCalories(), items[2][1].getCalories(), items[2][2].getCalories());
-		System.out.format(CODES, 3, 3, 3);
-		System.out.format(HORIZ_SEPARATOR);
-	}
-	
-	/**
-	 * Gets the user selection and validates that it is only two characters long
-	 * and equals one of the available selection codes
-	 * @return
-	 */
-	private void getSelection() {
-		boolean invalidSelection;
-		
-		do {
-			invalidSelection = false;
-			System.out.println("\nMake a selection (ex. A1):");
-			selection = sc.nextLine().toUpperCase();
-			if(selection.length() != 2)
-				invalidSelection = true;
-			else if(selection.charAt(0) != 'A' && selection.charAt(0) != 'B' && selection.charAt(0) != 'C') {
-				invalidSelection = true;
-			}
-			else if(selection.charAt(1) != '1' && selection.charAt(1) != '2' && selection.charAt(1) != '3') {
-				invalidSelection = true;
-			}
-		} while(invalidSelection);
-	}
-	
-	/**
-	 * Sets the row and column indexes of the items array based on the item selection string (e.g. B3 becomes 2,1)
-	 * @param selection
-	 */
-	private void selectionToRowCol() {
-		//Set the item row
-		switch(selection.charAt(0)) {
-			case 'A':
-				setCol(0);
-				break;
-			case 'B':
-				setCol(1);
-				break;
-			case 'C':
-				setCol(2);
-				break;
-		}
-		
-		//Set the item column 
-		switch(selection.charAt(1)) {
-			case '1':
-				setRow(0);
-				break;
-			case '2':
-				setRow(1);
-				break;
-			case '3':
-				setRow(2);
-				break;
-		}		
 	}
 	
 	/**

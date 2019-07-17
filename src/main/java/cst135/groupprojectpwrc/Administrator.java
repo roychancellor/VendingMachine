@@ -90,6 +90,4 @@ public class Administrator {
 			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");			
 		}
 	}
-	
-
 }
