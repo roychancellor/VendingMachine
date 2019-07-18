@@ -7,7 +7,14 @@ public class MachineController {
 	 * @param args the String args array (not implemented in this application)
 	 */
 	public static void main(String[] args) {
-		VendingMachine vm = new VendingMachine(3, 3);
+		//Make the two required objects to run the machine
+		Administrator root = new Administrator("<<rootkey>>", "4802426356");
+		VendingMachine vm = new VendingMachine(3, 3, root);
+		
+		//Initialize the machine (loads it with tasty items and sets to initialized)
+		root.doInitializeMachine(vm);
+		
+		//Run the machine and rake in the money
 		vm.runMachine();
 	}
 }

@@ -53,6 +53,21 @@ public class Administrator {
 
 	//Class methods
 	/**
+	 * initializes a vending machine by loading it with items
+	 * @param vm the vending machine to initialize
+	 */
+	public void doInitializeMachine(VendingMachine vm) {
+		//Set the VendingMachine instance
+		this.vm = vm;
+		
+		//Load the machine with tasty items for sale
+		doLoadMachine();
+		
+		//Set the machine to initialized so it can run
+		vm.setMachineInitialized(true);
+	}
+	
+	/**
 	 * shows the cash menu
 	 * @param balanceOwed the remaining balance to be paid for the item
 	 */
@@ -60,7 +75,7 @@ public class Administrator {
 		System.out.println("\nrootrootrootrootrootrootrootroot");
 		System.out.println("       ADMINISTRATOR MENU");
 		System.out.println("rootrootrootrootrootrootrootroot");
-		System.out.println(" 1. Restock Items");
+		System.out.println(" 1. Restock All Items");
 		System.out.println(" 2. Reconfigure Items");
 		System.out.println(" 3. View Transactions");
 		System.out.println(" 4. Shutdown Machine");
@@ -72,47 +87,52 @@ public class Administrator {
 	
 	/**
 	 * primary method for performing machine administration functions
+	 * can run only with a vending machine that has been initialized
 	 * @param vm a VendingMachine item for the machine
 	 */
-	public void runAdmin(VendingMachine vm) {
-		this.vm = vm;
-		boolean adminLoggedIn = true;
-		final int EXIT_MENU = 0;
-		final int MIN_MENU = 1;
-		final int MAX_MENU = 4;
-		do {
-			adminLoggedIn = true;
-			showAdminMenu();
-			switch(FrontEnd.getIntFromUser(EXIT_MENU, MAX_MENU,
-				"Oops, enter a value from " + MIN_MENU + " to " + MAX_MENU + " or " + EXIT_MENU + " to exit admin mode")) {
-				case 1:
-					System.out.println("  Restocking items");
-					doRestockItems();
-					break;
-				case 2:
-					System.out.println("  Reconfiguring items");
-					break;
-				case 3:
-					System.out.println("  Viewing transactions");
-					this.printTransactions();
-					break;
-				case 4:
-					System.out.println("\n  ***Shutting down machine...");
-					this.machineRunning = false;
-					adminLoggedIn = false;
-					break;
-				case 0:
-					adminLoggedIn = false;
-					break;
-			}
-		} while(adminLoggedIn);
+	public void runAdmin() {
+		if(this.vm == null) {
+			System.out.println("\n*** ERROR: Machine not initialized.");
+		}
+		else {
+			boolean adminLoggedIn = true;
+			final int EXIT_MENU = 0;
+			final int MIN_MENU = 1;
+			final int MAX_MENU = 4;
+			do {
+				adminLoggedIn = true;
+				showAdminMenu();
+				switch(FrontEnd.getIntFromUser(EXIT_MENU, MAX_MENU,
+					"Oops, enter a value from " + MIN_MENU + " to " + MAX_MENU + " or " + EXIT_MENU + " to exit admin mode")) {
+					case 1:
+						System.out.println("  Restocking items");
+						doRestockAllItems();
+						break;
+					case 2:
+						System.out.println("  Reconfiguring items");
+						break;
+					case 3:
+						System.out.println("  Viewing transactions");
+						this.printTransactions();
+						break;
+					case 4:
+						System.out.println("\n  ***Shutting down machine...");
+						this.machineRunning = false;
+						adminLoggedIn = false;
+						break;
+					case 0:
+						adminLoggedIn = false;
+						break;
+				}
+			} while(adminLoggedIn);
+		}
 	}
 	
 	/**
 	 * checks inventory of each item in the machine and replenishes any
 	 * tubes that are not full
 	 */
-	private void doRestockItems() {
+	private void doRestockAllItems() {
 		for(int r = 0; r < vm.getNumRows(); r++) {
 			for(int c = 0; c < vm.getNumCols(); c++) {
 				if(vm.getItems()[r][c].getCurrentInventory() < vm.getItemsPerTube()) {
@@ -124,10 +144,10 @@ public class Administrator {
 	}
 	
 	/**
-	 * Creates the items for the machine
-	 * @param vm a vending machine object for loading items into
+	 * Loads all items into the machine
+	 * @param vm a vending machine object into which items will be loaded
 	 */
-	public void loadMachine(VendingMachine vm) {
+	private void doLoadMachine() {
 		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
 		vm.getItems()[0][0] = new Item(0.25, "Fritos", 0.75, 1, vm.getItemsPerTube(), 250);
 		vm.getItems()[0][1] = new Item(0.25, "Doritos", 0.75, 1, vm.getItemsPerTube(), 250);
@@ -164,7 +184,7 @@ public class Administrator {
 	/**
 	 * prints a list of transactions for a vending machine object
 	 */
-	public void printTransactions() {
+	private void printTransactions() {
 		System.out.println("\nMachine\tDate-Time\t\tPos\tDescription\tCost\tSale");
 		System.out.println("---------------------------------------------------------------------");
 		if(vm.getTransactions().size() > 0) {

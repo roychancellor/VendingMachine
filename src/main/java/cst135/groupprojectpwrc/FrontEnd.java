@@ -7,37 +7,62 @@ public class FrontEnd {
 	//Scanner for use across the application
 	public static final Scanner sc = new Scanner(System.in);
 	private static String selection;
+	private static final int CASH_MENU_MIN = 1;
+	private static final int CASH_MENU_MAX = 3;
 	
+	/**
+	 * @return the cashMenuMin
+	 */
+	public static int getCashMenuMin() {
+		return CASH_MENU_MIN;
+	}
+
+	/**
+	 * @return the cashMenuMax
+	 */
+	public static int getCashMenuMax() {
+		return CASH_MENU_MAX;
+	}
+
 	/**
 	 * Machine user interface
 	 * @param items a two-dimensional array of item objects in a vending machine
 	 */
 	public static void displayMachineInterface(Item[][] items) {
-		final String DESCRIPTIONS = "|  %s\t|  %s\t|  %s\t|\n";
-		final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
-		final String CALORIES = "|  %d cal\t|  %d cal\t|  %d cal\t|\n";
-		final String CODES = "|  A%d\t\t|  B%d\t\t|  C%d\t\t|\n";
-		final String HORIZ_SEPARATOR = "-------------------------------------------------\n";
-		//TODO Add a format constant for the item descriptions
-		System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("            Paul and Roy's Snack Box");
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.format("\n" + HORIZ_SEPARATOR);
-		System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
-		System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
-		System.out.format(CALORIES, items[0][0].getCalories(), items[0][1].getCalories(), items[0][2].getCalories());
-		System.out.format(CODES, 1, 1, 1);
-		System.out.format(HORIZ_SEPARATOR);
-		System.out.format(DESCRIPTIONS, items[1][0].getDescription(), items[1][1].getDescription(), items[1][2].getDescription());
-		System.out.format(PRICES, items[1][0].getSalesPrice(), items[1][1].getSalesPrice(), items[1][2].getSalesPrice());
-		System.out.format(CALORIES, items[1][0].getCalories(), items[1][1].getCalories(), items[1][2].getCalories());
-		System.out.format(CODES, 2, 2, 2);
-		System.out.format(HORIZ_SEPARATOR);
-		System.out.format(DESCRIPTIONS, items[2][0].getDescription(), items[2][1].getDescription(), items[2][2].getDescription());
-		System.out.format(PRICES, items[2][0].getSalesPrice(), items[2][1].getSalesPrice(), items[2][2].getSalesPrice());
-		System.out.format(CALORIES, items[2][0].getCalories(), items[2][1].getCalories(), items[2][2].getCalories());
-		System.out.format(CODES, 3, 3, 3);
-		System.out.format(HORIZ_SEPARATOR);
+		boolean allItemsExist = true;
+		for(int r = 0; r < items.length; r++) {
+			for(int c = 0; c < items[r].length; c++) {
+				if(items[r][c] == null)
+					allItemsExist = false;
+			}
+		}
+		if(allItemsExist) {
+			final String DESCRIPTIONS = "|  %s\t|  %s\t|  %s\t|\n";
+			final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
+			final String CALORIES = "|  %d cal\t|  %d cal\t|  %d cal\t|\n";
+			final String CODES = "|  A%d\t\t|  B%d\t\t|  C%d\t\t|\n";
+			final String HORIZ_SEPARATOR = "-------------------------------------------------\n";
+			//TODO Add a format constant for the item descriptions
+			System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			System.out.println("            Paul and Roy's Snack Box");
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			System.out.format("\n" + HORIZ_SEPARATOR);
+			System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
+			System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
+			System.out.format(CALORIES, items[0][0].getCalories(), items[0][1].getCalories(), items[0][2].getCalories());
+			System.out.format(CODES, 1, 1, 1);
+			System.out.format(HORIZ_SEPARATOR);
+			System.out.format(DESCRIPTIONS, items[1][0].getDescription(), items[1][1].getDescription(), items[1][2].getDescription());
+			System.out.format(PRICES, items[1][0].getSalesPrice(), items[1][1].getSalesPrice(), items[1][2].getSalesPrice());
+			System.out.format(CALORIES, items[1][0].getCalories(), items[1][1].getCalories(), items[1][2].getCalories());
+			System.out.format(CODES, 2, 2, 2);
+			System.out.format(HORIZ_SEPARATOR);
+			System.out.format(DESCRIPTIONS, items[2][0].getDescription(), items[2][1].getDescription(), items[2][2].getDescription());
+			System.out.format(PRICES, items[2][0].getSalesPrice(), items[2][1].getSalesPrice(), items[2][2].getSalesPrice());
+			System.out.format(CALORIES, items[2][0].getCalories(), items[2][1].getCalories(), items[2][2].getCalories());
+			System.out.format(CODES, 3, 3, 3);
+			System.out.format(HORIZ_SEPARATOR);
+		}
 	}
 	
 	/**

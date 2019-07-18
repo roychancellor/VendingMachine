@@ -40,7 +40,11 @@ public class Payment {
 		FrontEnd.showCashMenu(this.balanceOwed);
 
 		//Convert validated selection into a dollar amount and return it
-		return selectionToDollar(FrontEnd.getIntFromUser(1, 3, "** Please insert quarters, dollar bills, or five-dollar bills only"));
+		return selectionToDollar(FrontEnd.getIntFromUser(
+			FrontEnd.getCashMenuMin(),
+			FrontEnd.getCashMenuMax(),
+			"** Please insert quarters, dollar bills, or five-dollar bills only")
+		);
 	}
 	
 	/**
