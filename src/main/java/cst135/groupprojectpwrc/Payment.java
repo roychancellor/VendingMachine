@@ -1,17 +1,23 @@
 package cst135.groupprojectpwrc;
 
-import java.util.InputMismatchException;
-
 public class Payment {
 	//Money menu
 	//Track deposit / remainder
 	//Dispense change
 	private double balanceOwed;
 	
+	/**
+	 * constructor for Payment objects
+	 * @param balanceOwed the amount the customer owes before receiving the selected item
+	 */
 	public Payment(double balanceOwed) {
 		this.balanceOwed = balanceOwed;
 	}
 	
+	/**
+	 * processes the cash payment from the user by keeping track of how much is owed and
+	 * dispensing change
+	 */
 	public void doCashPayment() {
 		//loop until cash paid >= balance owed, updating balance owed each time
 		while(this.balanceOwed > 0) {
@@ -25,32 +31,20 @@ public class Payment {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return the dollar amount the user "input"
+	 */
 	public double getPaymentAmount() {
-		boolean invalidSelection;
-		int selection = 0;
-		do {
-			invalidSelection = false;
-			FrontEnd.showCashMenu(this.balanceOwed);
-			try {
-				selection = FrontEnd.sc.nextInt();
-				if(selection !=1 && selection != 2 && selection != 3) {
-					FrontEnd.showCashErrorMessage();
-					invalidSelection = true;
-				}
-			}
-			catch(InputMismatchException e) {
-				FrontEnd.showCashErrorMessage();
-				invalidSelection = true;
-				FrontEnd.sc.nextLine();
-			}
-			
-		} while(invalidSelection);
-		
-		//scan the next line to clear out the newline character before returning
-		FrontEnd.sc.nextLine();
-		
+		//Show the cash entry interface
+		FrontEnd.showCashMenu(this.balanceOwed);
+
 		//Convert validated selection into a dollar amount and return it
-		return selectionToDollar(selection);
+		return selectionToDollar(FrontEnd.getIntFromUser(
+			FrontEnd.getCashMenuMin(),
+			FrontEnd.getCashMenuMax(),
+			"** Please insert quarters, dollar bills, or five-dollar bills only")
+		);
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package cst135.groupprojectpwrc;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transaction {
@@ -10,15 +12,17 @@ public class Transaction {
 	private String itemPositionCode;
 	private double itemCost;
 	private double purchaseAmount;
-	private static final String DELIM = ",";
+	private static final String DELIM = "\t";
+	public static final SimpleDateFormat dateTime = new SimpleDateFormat("MM/dd/YYYY HH:mm:ss");
+	private static final NumberFormat money = NumberFormat.getCurrencyInstance();
 	
 	//Constructor	
 	/**
-	 * @param machineID
-	 * @param itemPurchased
-	 * @param itemPositionCode
-	 * @param itemCost
-	 * @param purchaseAmount
+	 * @param machineID the ID for the machine
+	 * @param itemPurchased the description of hte item purchased
+	 * @param itemPositionCode the position code in the machine, e.g. "A1"
+	 * @param itemCost the machine vendor's item cost
+	 * @param purchaseAmount the customer purchase amount for the item
 	 */
 	public Transaction(String machineID, String itemPurchased, String itemPositionCode, double itemCost,
 			double purchaseAmount) {
@@ -115,13 +119,17 @@ public class Transaction {
 		this.purchaseAmount = purchaseAmount;
 	}
 	
+	/**
+	 * @return the string representation of a transaction with formatting
+	 * for date and currency and a delimiter between values
+	 */
 	public String toString() {
-		return this.transDate
-			+ DELIM + this.machineID
+		return this.machineID
+			+ DELIM + dateTime.format(this.transDate)
 			+ DELIM + this.itemPositionCode
-			+ DELIM + this.itemPurchased
-			+ DELIM + this.itemCost
-			+ DELIM + this.purchaseAmount;
+			+ DELIM + this.itemPurchased + (this.itemPurchased.length() < 8 ? DELIM : "")
+			+ DELIM + money.format(this.itemCost)
+			+ DELIM + money.format(this.purchaseAmount);
 	}
 	
 	public void printTransaction() {

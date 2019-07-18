@@ -7,8 +7,8 @@ import java.util.List;
 public class VendingMachine {
 	// Class data fields
 	private String selection;
-	private static int numRows;
-	private static int numCols;
+	private int numRows;
+	private int numCols;
 	private int row;
 	private int col;
 	private Item[][] items;
@@ -19,24 +19,22 @@ public class VendingMachine {
 	private Payment payment;
 	private List<Transaction> transactions;
 	private Administrator root;
-	private ProcessBuilder processBuilder = new ProcessBuilder();
-
+	private boolean machineInitialized;
+	
 	/**
 	 * Constructor for a new VendingMachine object
-	 * 
-	 * @param numRows
-	 * @param numCols
+	 * @param numRows the number of horizontal rows in the machine
+	 * @param numCols the number of vertical columns in the machine
 	 */
-	public VendingMachine(int numRows, int numCols) {
-		items = new Item[numRows][numCols];
-		VendingMachine.numRows = numRows;
-		VendingMachine.numCols = numCols;
-		this.machineID = "PWRC1";
-		this.machineLatitude = 33.512682;
-		this.machineLongitude = -112.113626;
-		this.root = new Administrator("abc", "4802426456");
-		this.transactions = new ArrayList<Transaction>();
-		root.loadMachine(this);
+	public VendingMachine(int numRows, int numCols, Administrator root) {
+		 items = new Item[numRows][numCols];
+		 this.numRows = numRows;
+		 this.numCols = numCols;
+		 this.machineID = "PWRC1";
+		 this.machineLatitude = 33.512682;
+		 this.machineLongitude = -112.113626;
+		 this.transactions = new ArrayList<Transaction>();
+		 this.root = root;
 	}
 
 	// Accessors and Mutators
@@ -86,14 +84,14 @@ public class VendingMachine {
 	/**
 	 * @return the numRows
 	 */
-	public static int getNumRows() {
+	public int getNumRows() {
 		return numRows;
 	}
 
 	/**
 	 * @return the numCols
 	 */
-	public static int getNumCols() {
+	public int getNumCols() {
 		return numCols;
 	}
 
@@ -119,7 +117,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * @param row the row to set
+	 * @param rowSelect the row to set
 	 */
 	public void setRow(int rowSelect) {
 		this.row = rowSelect;
@@ -133,7 +131,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * @param col the col to set
+	 * @param colSelect the col to set
 	 */
 	public void setCol(int colSelect) {
 		this.col = colSelect;
@@ -170,6 +168,20 @@ public class VendingMachine {
 	}
 
 	/**
+	 * @return the machineInitialized
+	 */
+	public boolean isMachineInitialized() {
+		return machineInitialized;
+	}
+
+	/**
+	 * @param machineInitialized the machineInitialized to set
+	 */
+	public void setMachineInitialized(boolean machineInitialized) {
+		this.machineInitialized = machineInitialized;
+	}
+
+	/**
 	 * returns the machine ID with the latitude and longitude of its location
 	 */
 	public String toString() {
@@ -178,15 +190,35 @@ public class VendingMachine {
 
 	// Class methods
 	/**
-	 * method that perpetually runs the machine
+	 * method that perpetually runs an initialized machine
 	 */
 	public void runMachine() {
-		do {
-			// Show machine interface
-			FrontEnd.displayMachineInterface(this.items);
-			// Purchase items
-			purchaseItem();
-		} while (true);
+		if(this.isMachineInitialized()) {
+			do {
+				//Show machine customer interface
+				FrontEnd.displayMachineInterface(this.items);
+				
+				//Get the selection from the user (e.g. "B3")
+				this.selection = FrontEnd.getItemSelection(root.getPassCode());
+				
+				//Check for entry of admin password
+				if(this.selection.toUpperCase().equals(root.getPassCode().toUpperCase())) {
+					//Open the admin screen
+					root.runAdmin();
+				}
+				else {
+					//Convert the selection into a row-column reference for the items array
+					setRow(FrontEnd.selectionToRow());
+					setCol(FrontEnd.selectionToCol());
+					
+					//Purchase and dispense items
+					this.purchaseItem();				
+				}
+			} while(root.isMachineRunning());
+		}
+		else {
+			System.out.println("\n*** ERROR: Machine uninitialized. Stopping.");
+		}
 	}
 
 	/**
@@ -195,16 +227,9 @@ public class VendingMachine {
 	 * dispenses item, updates inventory, and records the transaction for
 	 * administrator analysis
 	 */
-	public void purchaseItem() {
-		// Get the selection from the user (e.g. "B3")
-		FrontEnd.getItemSelection();
-		// Convert the selection into a row-column reference for the items array
-		setRow(FrontEnd.selectionToRow());
-		setCol(FrontEnd.selectionToCol());
-
-		// Check availability of item: if available, get payment and dispense item; if
-		// not, alert user
-		if (itemIsAvailable()) {
+	private void purchaseItem() {
+		//Check availability of item: if available, get payment and dispense item; if not, alert user
+		if(itemIsAvailable()) {
 			System.out.println("\nPurchasing " + items[getRow()][getCol()].getDescription());
 
 			// Get cash payment from the user
@@ -260,9 +285,14 @@ public class VendingMachine {
 	/**
 	 * adds a transaction to the transaction list
 	 */
-	public void recordTransaction() {
-		transactions.add(new Transaction(this.machineID, items[getRow()][getCol()].getDescription(), this.selection,
-				items[getRow()][getCol()].getCost(), items[getRow()][getCol()].getSalesPrice()));
+	private  void recordTransaction() {
+		transactions.add(
+			new Transaction(this.machineID,
+			items[getRow()][getCol()].getDescription(),
+			this.selection,
+			items[getRow()][getCol()].getCost(),
+			items[getRow()][getCol()].getSalesPrice())
+		);
 	}
 
 	/**
