@@ -18,11 +18,11 @@ public class Transaction {
 	
 	//Constructor	
 	/**
-	 * @param machineID
-	 * @param itemPurchased
-	 * @param itemPositionCode
-	 * @param itemCost
-	 * @param purchaseAmount
+	 * @param machineID the ID for the machine
+	 * @param itemPurchased the description of hte item purchased
+	 * @param itemPositionCode the position code in the machine, e.g. "A1"
+	 * @param itemCost the machine vendor's item cost
+	 * @param purchaseAmount the customer purchase amount for the item
 	 */
 	public Transaction(String machineID, String itemPurchased, String itemPositionCode, double itemCost,
 			double purchaseAmount) {
@@ -119,6 +119,10 @@ public class Transaction {
 		this.purchaseAmount = purchaseAmount;
 	}
 	
+	/**
+	 * @return the string representation of a transaction with formatting
+	 * for date and currency and a delimiter between values
+	 */
 	public String toString() {
 		return this.machineID
 			+ DELIM + dateTime.format(this.transDate)

@@ -44,9 +44,9 @@ public class FrontEnd {
 	 * gets an integer between minValue and maxValue from the user
 	 * If the user enters anything other than an integer, catches the exception
 	 * and prints the error message received from the method call
-	 * @param minValue
-	 * @param maxValue
-	 * @param errorMessage
+	 * @param minValue the minimum value of the menu
+	 * @param maxValue the maximum value of the menu
+	 * @param errorMessage the error message to display for an invalid entry
 	 * @return the integer the user entered
 	 */
 	public static int getIntFromUser(int minValue, int maxValue, String errorMessage) {
@@ -102,6 +102,7 @@ public class FrontEnd {
 	
 	/**
 	 * shows the cash error message when user enters the wrong type of cash
+	 * @param message the error message to display
 	 */
 	public static void showErrorMessage(String message) {
 		System.out.println("\n" + message);		
@@ -126,6 +127,8 @@ public class FrontEnd {
 	/**
 	 * Gets the user selection in UPPER case and validates that it is only two characters long
 	 * and equals one of the available selection codes
+	 * @param adminPassword the password to check when user enters a vending item selection
+	 * @return selection the string value of the user entry
 	 */
 	public static String getItemSelection(String adminPassword) {
 		boolean invalidSelection;

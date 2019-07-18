@@ -4,7 +4,7 @@ public class MachineController {
 	
 	/**
 	 * method that calls the runMachine method for the vending machine
-	 * @param args
+	 * @param args the String args array (not implemented in this application)
 	 */
 	public static void main(String[] args) {
 		VendingMachine vm = new VendingMachine(3, 3);

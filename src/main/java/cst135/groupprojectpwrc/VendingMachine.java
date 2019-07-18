@@ -21,8 +21,8 @@ public class VendingMachine {
 	
 	/**
 	 * Constructor for a new VendingMachine object
-	 * @param numRows
-	 * @param numCols
+	 * @param numRows the number of horizontal rows in the machine
+	 * @param numCols the number of vertical columns in the machine
 	 */
 	public VendingMachine(int numRows, int numCols) {
 		 items = new Item[numRows][numCols];
@@ -116,7 +116,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * @param row the row to set
+	 * @param rowSelect the row to set
 	 */
 	public void setRow(int rowSelect) {
 		this.row = rowSelect;
@@ -130,7 +130,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * @param col the col to set
+	 * @param colSelect the col to set
 	 */
 	public void setCol(int colSelect) {
 		this.col = colSelect;

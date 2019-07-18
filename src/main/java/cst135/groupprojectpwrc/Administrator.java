@@ -162,8 +162,7 @@ public class Administrator {
 	}	
 	
 	/**
-	 * prints a list of transactions
-	 * @param vm the vending machine object for printing transactions
+	 * prints a list of transactions for a vending machine object
 	 */
 	public void printTransactions() {
 		System.out.println("\nMachine\tDate-Time\t\tPos\tDescription\tCost\tSale");

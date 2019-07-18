@@ -18,11 +18,12 @@ public class Item {
 	 */
 	
 	/**
-	 * @param cost
-	 * @param description
-	 * @param salesPrice
-	 * @param minStockLevel
-	 * @param currentInventory
+	 * @param cost the machine vendor's item cost
+	 * @param description the description of the item
+	 * @param salesPrice the customer price of the item
+	 * @param minStockLevel the minimum stocking level before alerting of low inventory
+	 * @param currentInventory the current inventory of the item in the machine
+	 * @param calories the total number of calories for the item
 	 */
 	public Item(double cost, String description, double salesPrice, int minStockLevel, int currentInventory, int calories) {
 		super();

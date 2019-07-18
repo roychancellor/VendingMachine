@@ -8,7 +8,7 @@ public class Payment {
 	
 	/**
 	 * constructor for Payment objects
-	 * @param balanceOwed
+	 * @param balanceOwed the amount the customer owes before receiving the selected item
 	 */
 	public Payment(double balanceOwed) {
 		this.balanceOwed = balanceOwed;
