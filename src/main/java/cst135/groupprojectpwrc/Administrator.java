@@ -105,18 +105,18 @@ public class Administrator {
 				switch(FrontEnd.getIntFromUser(EXIT_MENU, MAX_MENU,
 					"Oops, enter a value from " + MIN_MENU + " to " + MAX_MENU + " or " + EXIT_MENU + " to exit admin mode")) {
 					case 1:
-						System.out.println("  Restocking items");
+						System.out.println("  Restocking items:");
+						System.out.println("  -----------------------------");
 						doRestockAllItems();
 						break;
 					case 2:
-						System.out.println("  Reconfiguring items");
+						System.out.println("  Reconfiguring items COMING SOON");
 						break;
 					case 3:
-						System.out.println("  Viewing transactions");
-						this.printTransactions();
+						this.doPrintTransactions();
 						break;
 					case 4:
-						System.out.println("\n  ***Shutting down machine...");
+						System.out.println("\n  *** Shutting down machine...");
 						this.machineRunning = false;
 						adminLoggedIn = false;
 						break;
@@ -184,12 +184,32 @@ public class Administrator {
 	/**
 	 * prints a list of transactions for a vending machine object
 	 */
-	private void printTransactions() {
-		System.out.println("\nMachine\tDate-Time\t\tPos\tDescription\tCost\tSale");
+	private void doPrintTransactions() {
+		double totalCost = 0;
+		double totalSales = 0;
+		
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("              TRANSACTION REPORT FOR MACHINE " + vm.getMachineID());
+		System.out.println("       PERIOD: "
+				+ Transaction.dateTime.format(vm.getTransactions().get(0).getTransDate()) + " to "
+				+ Transaction.dateTime.format(vm.getTransactions().get(vm.getTransactions().size() - 1).getTransDate())
+			);
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+
+		System.out.println("---------------------------------------------------------------------");
+		System.out.println("Machine\tDate-Time\t\tPos\tDescription\tCost\tSale");
 		System.out.println("---------------------------------------------------------------------");
 		if(vm.getTransactions().size() > 0) {
-			for(Transaction t : vm.getTransactions())
+			for(Transaction t : vm.getTransactions()) {
 				t.printTransaction();
+				totalCost += t.getItemCost();
+				totalSales += t.getPurchaseAmount();
+			}
+			System.out.println("---------------------------------------------------------------------");
+			System.out.format("\t\t\t\t\t\tTOTALS:\t$%.2f\t$%.2f\n", totalCost, totalSales);
+			System.out.println("--------------------------------------");
+			System.out.format("| TOTAL PROFIT FOR PERIOD: $%8.2f |\n", (totalSales - totalCost));
+			System.out.println("--------------------------------------");
 		}
 		else {
 			System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");

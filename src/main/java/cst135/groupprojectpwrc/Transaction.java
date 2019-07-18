@@ -13,7 +13,7 @@ public class Transaction {
 	private double itemCost;
 	private double purchaseAmount;
 	private static final String DELIM = "\t";
-	private static final SimpleDateFormat dateTime = new SimpleDateFormat("MM/dd/YYYY HH:mm:ss");
+	public static final SimpleDateFormat dateTime = new SimpleDateFormat("MM/dd/YYYY HH:mm:ss");
 	private static final NumberFormat money = NumberFormat.getCurrencyInstance();
 	
 	//Constructor	
