@@ -88,7 +88,6 @@ public class Administrator {
 	/**
 	 * primary method for performing machine administration functions
 	 * can run only with a vending machine that has been initialized
-	 * @param vm a VendingMachine item for the machine
 	 */
 	public void runAdmin() {
 		if(this.vm == null) {

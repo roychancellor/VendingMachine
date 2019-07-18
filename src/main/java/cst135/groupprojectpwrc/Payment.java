@@ -35,6 +35,7 @@ public abstract class Payment {
 	
 	/**
 	 * gets the payment amount from the user in either cash or electronic form
+	 * @return the amount of the payment from the user
 	 */
 	public abstract double getPaymentAmount();	
 }

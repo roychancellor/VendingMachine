@@ -25,6 +25,7 @@ public class VendingMachine {
 	 * Constructor for a new VendingMachine object
 	 * @param numRows the number of horizontal rows in the machine
 	 * @param numCols the number of vertical columns in the machine
+	 * @param root is the Administrator object
 	 */
 	public VendingMachine(int numRows, int numCols, Administrator root) {
 		 items = new Item[numRows][numCols];
