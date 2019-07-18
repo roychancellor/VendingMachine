@@ -232,9 +232,15 @@ public class VendingMachine {
 		if(itemIsAvailable()) {
 			System.out.println("\nPurchasing " + items[getRow()][getCol()].getDescription());
 
-			// Get cash payment from the user
-			payment = new Payment(items[getRow()][getCol()].getSalesPrice());
-			payment.doCashPayment();
+			//Get payment type from user
+			int payType = getPaymentType();
+			if(payType == 1) {
+				payment = new Cash(items[getRow()][getCol()].getSalesPrice());
+			}
+			else if(payType == 2) {
+				payment = new Electronic(items[getRow()][getCol()].getSalesPrice());
+			}
+			payment.doPayment();
 
 			// Dispense item
 			dispenseItem();
@@ -247,6 +253,11 @@ public class VendingMachine {
 		} else {
 			FrontEnd.showItemNotAvailable(items[getRow()][getCol()].getDescription());
 		}
+	}
+	
+	private int getPaymentType() {
+		FrontEnd.showPaymentMenu();
+		return FrontEnd.getIntFromUser(1, 2, "\n Payment must be cash or phone");
 	}
 
 	/**

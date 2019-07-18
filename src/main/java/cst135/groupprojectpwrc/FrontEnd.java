@@ -102,6 +102,19 @@ public class FrontEnd {
 	}
 	
 	/**
+	 * shows the payment type menu
+	 */
+	public static void showPaymentMenu() {
+		System.out.println("\n-------------------------");
+		System.out.println("      PAYMENT METHOD");
+		System.out.println("-------------------------");
+		System.out.println(" 1. CASH");
+		System.out.println(" 2. PAY BY PHONE");
+		System.out.println("-------------------------");
+		System.out.println(" Selection:");
+	}
+
+	/**
 	 * shows the cash menu
 	 * @param balanceOwed the remaining balance to be paid for the item
 	 */
