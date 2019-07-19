@@ -21,9 +21,11 @@ public class Electronic extends Payment {
 	 * @return the dollar amount the user "input"
 	 */
 	public double getPaymentAmount() {
-		System.out.println("\nPlace your phone near the sensor");
-		System.out.println("<< Processing >>");
-		System.out.print("\nThank you!");
+		System.out.println("\n" + FrontEnd.makeHeaderString(32, '$'));
+		System.out.println("Place your phone near the sensor");
+		System.out.println("\n<< Processing >>");
+		System.out.println("\nThank you!");
+		System.out.println(FrontEnd.makeHeaderString(32, '$'));
 		
 		return 0;
 	}	

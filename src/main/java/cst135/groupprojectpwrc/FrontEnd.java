@@ -41,11 +41,11 @@ public class FrontEnd {
 			final String PRICES = "|  $%.2f\t|  $%.2f\t|  $%.2f\t|\n";
 			final String CALORIES = "|  %d cal\t|  %d cal\t|  %d cal\t|\n";
 			final String CODES = "|  A%d\t\t|  B%d\t\t|  C%d\t\t|\n";
-			final String HORIZ_SEPARATOR = "-------------------------------------------------\n";
+			final String HORIZ_SEPARATOR = makeHeaderString(49, '-') + "\n";
 			//TODO Add a format constant for the item descriptions
-			System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			System.out.println("\n\n" + makeHeaderString(49, '$'));
 			System.out.println("            Paul and Roy's Snack Box");
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			System.out.println(makeHeaderString(49, '$'));
 			System.out.format("\n" + HORIZ_SEPARATOR);
 			System.out.format(DESCRIPTIONS, items[0][0].getDescription(), items[0][1].getDescription(), items[0][2].getDescription());
 			System.out.format(PRICES, items[0][0].getSalesPrice(), items[0][1].getSalesPrice(), items[0][2].getSalesPrice());
@@ -63,6 +63,29 @@ public class FrontEnd {
 			System.out.format(CODES, 3, 3, 3);
 			System.out.format(HORIZ_SEPARATOR);
 		}
+	}
+	
+	/**
+	 * shows the purchased item description to the customer
+	 * @param itemDescription the item being purchased
+	 */
+	public static void showPurchasedItem(String itemDescription) {
+		System.out.println("\n" + makeHeaderString(itemDescription.length() + 15, '-'));
+		System.out.println("| Purchasing " + itemDescription + " |");
+		System.out.println(makeHeaderString(itemDescription.length() + 15, '-'));
+	}
+	
+	/**
+	 * helper method to print header lines
+	 * @param numChars the number of characters to print
+	 * @param headerChar the character to print multiple times
+	 * @return the string of characters
+	 */
+	public static String makeHeaderString(int numChars, char headerChar) {
+		String header = "";
+		for(int i = 0; i < numChars; i++)
+			header += headerChar;
+		return header;
 	}
 	
 	/**
@@ -105,12 +128,12 @@ public class FrontEnd {
 	 * shows the payment type menu
 	 */
 	public static void showPaymentMenu() {
-		System.out.println("\n-------------------------");
+		System.out.println("\n" + makeHeaderString(25, '-'));
 		System.out.println("      PAYMENT METHOD");
-		System.out.println("-------------------------");
+		System.out.println(makeHeaderString(25, '-'));
 		System.out.println(" 1. CASH");
 		System.out.println(" 2. PAY BY PHONE");
-		System.out.println("-------------------------");
+		System.out.println(makeHeaderString(25, '-'));
 		System.out.println(" Selection:");
 	}
 
@@ -119,14 +142,14 @@ public class FrontEnd {
 	 * @param balanceOwed the remaining balance to be paid for the item
 	 */
 	public static void showCashMenu(double balanceOwed) {
-		System.out.println("\n-------------------------");
+		System.out.println("\n" + makeHeaderString(25, '-'));
 		System.out.println("      CASH PAYMENT");
 		System.out.format("      Insert $%.2f\n", balanceOwed);
-		System.out.println("-------------------------");
+		System.out.println(makeHeaderString(25, '-'));
 		System.out.println(" 1. $0.25");
 		System.out.println(" 2. $1.00");
 		System.out.println(" 3. $5.00");
-		System.out.println("-------------------------");
+		System.out.println(makeHeaderString(25, '-'));
 		System.out.println(" Selection:");
 	}
 
@@ -155,11 +178,11 @@ public class FrontEnd {
 		if(itemDescription.charAt(itemDescription.length() - 1) == 's')
 			stateVerb = "are";
 		
-		System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println("\n" + makeHeaderString(38, '@'));
 		System.out.println("  Sorry, " + itemDescription
 			+ " " + stateVerb + " unavailable"
 			+ "\n  Make a different selection");
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println(makeHeaderString(38, '@'));
 	}
 	
 	/**
@@ -173,7 +196,9 @@ public class FrontEnd {
 		
 		do {
 			invalidSelection = false;
-			System.out.println("\nMake a selection (ex. A1):");
+			System.out.println("\n" + makeHeaderString(29, '-'));
+			System.out.println("| Make a selection (ex. A1) | -->");
+			System.out.println(makeHeaderString(29, '-'));
 			selection = sc.nextLine().toUpperCase();
 			
 			//Check for admin password match

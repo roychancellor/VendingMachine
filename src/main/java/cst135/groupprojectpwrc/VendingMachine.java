@@ -20,6 +20,7 @@ public class VendingMachine {
 	private List<Transaction> transactions;
 	private Administrator root;
 	private boolean machineInitialized;
+	private boolean machineFull;
 	
 	/**
 	 * Constructor for a new VendingMachine object
@@ -183,6 +184,20 @@ public class VendingMachine {
 	}
 
 	/**
+	 * @return the machineFull
+	 */
+	public boolean isMachineFull() {
+		return machineFull;
+	}
+
+	/**
+	 * @param machineFull the machineFull to set
+	 */
+	public void setMachineFull(boolean machineFull) {
+		this.machineFull = machineFull;
+	}
+
+	/**
 	 * returns the machine ID with the latitude and longitude of its location
 	 */
 	public String toString() {
@@ -231,8 +246,9 @@ public class VendingMachine {
 	private void purchaseItem() {
 		//Check availability of item: if available, get payment and dispense item; if not, alert user
 		if(itemIsAvailable()) {
-			System.out.println("\nPurchasing " + items[getRow()][getCol()].getDescription());
-
+			//Tell customer what item is selected
+			FrontEnd.showPurchasedItem(items[getRow()][getCol()].getDescription());
+			
 			//Get payment type from user
 			int payType = getPaymentType();
 			if(payType == 1) {
@@ -248,6 +264,7 @@ public class VendingMachine {
 
 			// Update inventory of the item
 			decrementInventory();
+			this.setMachineFull(false);
 
 			// Record the transaction
 			recordTransaction();

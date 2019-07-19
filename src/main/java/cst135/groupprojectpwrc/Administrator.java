@@ -65,6 +65,7 @@ public class Administrator {
 		
 		//Set the machine to initialized so it can run
 		vm.setMachineInitialized(true);
+		vm.setMachineFull(true);
 	}
 	
 	/**
@@ -104,8 +105,6 @@ public class Administrator {
 				switch(FrontEnd.getIntFromUser(EXIT_MENU, MAX_MENU,
 					"Oops, enter a value from " + MIN_MENU + " to " + MAX_MENU + " or " + EXIT_MENU + " to exit admin mode")) {
 					case 1:
-						System.out.println("  Restocking items:");
-						System.out.println("  -----------------------------");
 						doRestockAllItems();
 						break;
 					case 2:
@@ -132,14 +131,24 @@ public class Administrator {
 	 * tubes that are not full
 	 */
 	private void doRestockAllItems() {
-		for(int r = 0; r < vm.getNumRows(); r++) {
-			for(int c = 0; c < vm.getNumCols(); c++) {
-				if(vm.getItems()[r][c].getCurrentInventory() < vm.getItemsPerTube()) {
-					System.out.println("\n  Restocking " + vm.getItems()[r][c].getDescription());
-					vm.getItems()[r][c].setCurrentInventory(vm.getItemsPerTube());
+		System.out.println("\n  Replenishing all stock:");
+		System.out.println("  " + FrontEnd.makeHeaderString(29, '-'));
+		if(vm.isMachineFull()) {
+			System.out.println("  Machine already full");
+		}
+		else {
+			for(int r = 0; r < vm.getNumRows(); r++) {
+				for(int c = 0; c < vm.getNumCols(); c++) {
+					if(vm.getItems()[r][c].getCurrentInventory() < vm.getItemsPerTube()) {
+						System.out.println("  Restocking " + vm.getItems()[r][c].getDescription());
+						vm.getItems()[r][c].setCurrentInventory(vm.getItemsPerTube());
+					}
 				}
 			}
+			//Reset the machine full flag
+			vm.setMachineFull(true);
 		}
+		System.out.println("  " + FrontEnd.makeHeaderString(29, '-'));
 	}
 	
 	/**
@@ -166,12 +175,12 @@ public class Administrator {
 	 * @param col the col reference of the item being replenished
 	 */
 	public void restockItem(VendingMachine vm, int row, int col) {
-		System.out.println("\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		System.out.println("\n" + FrontEnd.makeHeaderString(37, 'A'));
 		System.out.println("Replenishing stock for machine "
 			+ vm.toString()
 			+ ", item "
 			+ vm.getItems()[vm.getRow()][vm.getCol()].getDescription());
-		System.out.println("\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		System.out.println("\n" + FrontEnd.makeHeaderString(37, 'A'));
 
 		//Update the inventory
 		vm.getItems()[vm.getRow()][vm.getCol()].setCurrentInventory(vm.getItemsPerTube());
@@ -187,33 +196,40 @@ public class Administrator {
 		double totalCost = 0;
 		double totalSales = 0;
 		
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("              TRANSACTION REPORT FOR MACHINE " + vm.getMachineID());
-		System.out.println("       PERIOD: "
-				+ Transaction.dateTime.format(vm.getTransactions().get(0).getTransDate()) + " to "
-				+ Transaction.dateTime.format(vm.getTransactions().get(vm.getTransactions().size() - 1).getTransDate())
-			);
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
-
-		System.out.println("---------------------------------------------------------------------");
-		System.out.println("Machine\tDate-Time\t\tPos\tDescription\tCost\tSale");
-		System.out.println("---------------------------------------------------------------------");
-		if(vm.getTransactions().size() > 0) {
-			for(Transaction t : vm.getTransactions()) {
-				t.printTransaction();
-				totalCost += t.getItemCost();
-				totalSales += t.getPurchaseAmount();
-			}
-			System.out.println("---------------------------------------------------------------------");
-			System.out.format("\t\t\t\t\t\tTOTALS:\t$%.2f\t$%.2f\n", totalCost, totalSales);
-			System.out.println("--------------------------------------");
-			System.out.format("| TOTAL PROFIT FOR PERIOD: $%8.2f |\n", (totalSales - totalCost));
-			System.out.println("--------------------------------------");
+		if(vm.getTransactions().size() == 0) {
+			System.out.println("\n" + FrontEnd.makeHeaderString(29, '#'));
+			System.out.println(" *** No transactions to print");
+			System.out.println(FrontEnd.makeHeaderString(29, '#'));
 		}
 		else {
-			System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-			System.out.println("\n There are no transactions to print\n");
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");			
+			System.out.println("\n" + FrontEnd.makeHeaderString(69, '$'));
+			System.out.println("              TRANSACTION REPORT FOR MACHINE " + vm.getMachineID());
+			System.out.println("       PERIOD: "
+					+ Transaction.dateTime.format(vm.getTransactions().get(0).getTransDate()) + " to "
+					+ Transaction.dateTime.format(vm.getTransactions().get(vm.getTransactions().size() - 1).getTransDate())
+				);
+			System.out.println(FrontEnd.makeHeaderString(69, '$') + "\n");
+	
+			System.out.println(FrontEnd.makeHeaderString(69, '-'));
+			System.out.println("Machine\tDate-Time\t\tPos\tDescription\tCost\tSale");
+			System.out.println(FrontEnd.makeHeaderString(69, '-'));
+			if(vm.getTransactions().size() > 0) {
+				for(Transaction t : vm.getTransactions()) {
+					t.printTransaction();
+					totalCost += t.getItemCost();
+					totalSales += t.getPurchaseAmount();
+				}
+				System.out.println(FrontEnd.makeHeaderString(69, '-'));
+				System.out.format("\t\t\t\t\t\tTOTALS:\t$%.2f\t$%.2f\n", totalCost, totalSales);
+				System.out.println(FrontEnd.makeHeaderString(38, '-'));
+				System.out.format("| TOTAL PROFIT FOR PERIOD: $%8.2f |\n", (totalSales - totalCost));
+				System.out.println(FrontEnd.makeHeaderString(38, '-'));
+			}
+			else {
+				System.out.println("\n" + FrontEnd.makeHeaderString(27, '@'));
+				System.out.println("\n There are no transactions to print\n");
+				System.out.println(FrontEnd.makeHeaderString(27, '@'));
+			}
 		}
 	}
 }
