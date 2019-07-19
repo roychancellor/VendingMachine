@@ -157,15 +157,15 @@ public class Administrator {
 	 */
 	private void doLoadMachine() {
 		//double cost, String description, double salesPrice, int minStockLevel, int currentInventory
-		vm.getItems()[0][0] = new Item(0.25, "BBQ Chips", 0.75, 1, vm.getItemsPerTube(), 250);
-		vm.getItems()[0][1] = new Item(0.25, "Nacho Chips", 0.75, 1, vm.getItemsPerTube(), 250);
-		vm.getItems()[0][2] = new Item(0.25, "Potato Chips", 0.75, 1, vm.getItemsPerTube(), 250);
-		vm.getItems()[1][0] = new Item(0.25, "Rice Krispy", 1.00, 1, vm.getItemsPerTube(), 300);
-		vm.getItems()[1][1] = new Item(0.25, "Oreos", 1.25, 1, vm.getItemsPerTube(), 150);
-		vm.getItems()[1][2] = new Item(0.25, "Hershey Bar", 1.25, 1, vm.getItemsPerTube(), 150);
-		vm.getItems()[2][0] = new Item(0.25, "Pretzels", 1.50, 1, vm.getItemsPerTube(), 200);
-		vm.getItems()[2][1] = new Item(0.25, "Beef Jerky", 1.75, 1, vm.getItemsPerTube(), 500);
-		vm.getItems()[2][2] = new Item(0.25, "M & Ms", 0.50, 1, vm.getItemsPerTube(), 300);
+		vm.getItems()[0][0] = new Item(0.25, "BBQ Chips", 0.75, 1, vm.getItemsPerTube(), 150);
+		vm.getItems()[0][1] = new Item(0.25, "Nacho Chips", 0.75, 1, vm.getItemsPerTube(), 140);
+		vm.getItems()[0][2] = new Item(0.25, "Potato Chips", 0.75, 1, vm.getItemsPerTube(), 160);
+		vm.getItems()[1][0] = new Item(0.25, "Rice Krispy", 1.00, 1, vm.getItemsPerTube(), 260);
+		vm.getItems()[1][1] = new Item(0.25, "Oreos", 1.25, 1, vm.getItemsPerTube(), 460);
+		vm.getItems()[1][2] = new Item(0.25, "Hershey Bar", 1.25, 1, vm.getItemsPerTube(), 600);
+		vm.getItems()[2][0] = new Item(0.25, "Pretzels", 1.50, 1, vm.getItemsPerTube(), 110);
+		vm.getItems()[2][1] = new Item(0.25, "Beef Jerky", 1.75, 1, vm.getItemsPerTube(), 90);
+		vm.getItems()[2][2] = new Item(0.25, "M & Ms", 0.50, 1, vm.getItemsPerTube(), 420);
 	}
 	
 	/**
