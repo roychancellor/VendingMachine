@@ -244,7 +244,8 @@ public class VendingMachine {
 	 * administrator analysis
 	 */
 	private void purchaseItem() {
-		//Check availability of item: if available, get payment and dispense item; if not, alert user
+		//Check availability of item: if available, get payment and dispense item;
+		//if not, alert user
 		if(itemIsAvailable()) {
 			//Tell customer what item is selected
 			FrontEnd.showPurchasedItem(items[getRow()][getCol()].getDescription());
@@ -331,7 +332,6 @@ public class VendingMachine {
 		if (!items[getRow()][getCol()].isAdminAlerted()) {
 			System.out.println("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			System.out.println(" Messaging administrator:");
-//			messageAdmin("Low stock of " + items[getRow()][getCol()].getDescription() + " in machine: " + this.toString());
 			messageAdmin("Low stock of " + items[getRow()][getCol()].getDescription());
 			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
