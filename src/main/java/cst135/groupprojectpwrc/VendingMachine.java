@@ -346,11 +346,14 @@ public class VendingMachine {
 	 */
 	private void messageAdmin(String message) {
 		try {
-			Runtime.getRuntime().exec("sendemail -f vending.machine.cst135@gmail.com -m \"" + message + "\"  -t 6026894457@vtext.com -s smtp.gmail.com:587 -xu vending.machine.cst135@gmail.com -xp vendingMachine135");
+			System.out.println(" Sending message to " + root.getPhoneNumber() + "\n \"" + message + "\"");
+			Runtime.getRuntime().exec("sendemail -f vending.machine.cst135@gmail.com -m \"" + message + "\"  -t "
+				+ root.getPhoneNumber()
+				+ "@vtext.com -s smtp.gmail.com:587 -xu vending.machine.cst135@gmail.com -xp vendingMachine135");
+			System.out.println("\n <<<< swoosh....message sent >>>>");
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("\n <<<< UNABLE TO SEND MESSAGE >>>>");
+			//e.printStackTrace();
 		}
-		System.out.println(" Sending message to " + root.getPhoneNumber() + "\n \"" + message + "\"");
-		System.out.println("\n <<<< swoosh....message sent >>>>");
 	}
 }
